@@ -68,13 +68,13 @@ invoice_reconciliation/
 ├── evd_extraction_project/         # EVD Excel extraction
 │   ├── evd_extractor.py
 │   └── batch_evd_extractor.py
-├── pdf_extraction_system/          # PDF invoice extraction
+├── pdf_extraction_project/          # PDF invoice extraction
 │   ├── pdf_processor.py
 │   └── extractors/
 │       ├── vendor_vivacom.py       # Vivacom template
 │       ├── vendor_yettel.py        # Yettel template
 │       └── generic_extractor.py    # Generic patterns
-├── reconciliation_system/          # Comparison & reporting
+├── reconciliation_project/          # Comparison & reporting
 │   └── reconciliation_report.py
 └── docs/                           # Documentation
 ```

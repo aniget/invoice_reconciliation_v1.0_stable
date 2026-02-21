@@ -104,7 +104,7 @@ invoice_reconciliation/
 │   ├── batch_evd_extractor.py
 │   └── (docs and configs)
 │
-├── pdf_extraction_system/      # PDF invoice extraction
+├── pdf_extraction_project/      # PDF invoice extraction
 │   ├── pdf_processor.py
 │   ├── extractors/
 │   │   ├── vendor_vivacom.py
@@ -112,7 +112,7 @@ invoice_reconciliation/
 │   │   └── generic_extractor.py
 │   └── requirements.txt
 │
-├── reconciliation_system/      # Comparison & reporting
+├── reconciliation_project/      # Comparison & reporting
 │   ├── reconciliation_report.py
 │   └── pdf_evd_comparator.py
 │

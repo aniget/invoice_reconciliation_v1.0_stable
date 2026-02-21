@@ -53,9 +53,9 @@ class ReconciliationWorkflow:
 
         # Script paths
         self.evd_script = Path('evd_extraction_project/batch_evd_extractor.py')
-        self.pdf_script = Path('pdf_extraction_system/pdf_processor.py')
+        self.pdf_script = Path('pdf_extraction_project/pdf_processor.py')
         self.reconcile_script = Path(
-            'reconciliation_system/reconciliation_report.py')
+            'reconciliation_project/reconciliation_report.py')
 
     def setup_folders(self):
         """Create required folders if they don't exist."""

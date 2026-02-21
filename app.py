@@ -91,7 +91,7 @@ class InvoiceReconciliationUI:
             # Process PDF files
             pdf_output = output_dir / "pdf_data.json"
             result = subprocess.run([
-                'python', 'pdf_extraction_system/pdf_processor.py',
+                'python', 'pdf_extraction_project/pdf_processor.py',
                 str(pdf_dir),
                 str(pdf_output)
             ], capture_output=True, text=True)
@@ -104,7 +104,7 @@ class InvoiceReconciliationUI:
             # Generate reconciliation report
             report_output = output_dir / "reconciliation_report.xlsx"
             result = subprocess.run([
-                'python', 'reconciliation_system/reconciliation_report.py',
+                'python', 'reconciliation_project/reconciliation_report.py',
                 str(evd_output),
                 str(pdf_output),
                 str(report_output)

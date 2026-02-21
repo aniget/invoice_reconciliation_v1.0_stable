@@ -1,6 +1,9 @@
 # Invoice Reconciliation System - Requirements
 # Version 1.0 (Stable)
 
+-r evd_extraction_project/requirements.txt
+-r pdf_extraction_project/requirements.txt
+
 # Web Interface
 gradio==3.50.2
 

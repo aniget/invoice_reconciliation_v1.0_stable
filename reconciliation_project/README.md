@@ -92,14 +92,14 @@ python evd_extractor.py your_evd_file.xlsx evd_data.json
 ### Step 2: Extract PDF Data
 
 ```bash
-cd pdf_extraction_system
+cd pdf_extraction_project
 python pdf_processor.py invoices_folder/ pdf_data.json
 ```
 
 ### Step 3: Generate Reconciliation Report
 
 ```bash
-cd reconciliation_system
+cd reconciliation_project
 python reconciliation_report.py evd_data.json pdf_data.json report.xlsx
 ```
 
@@ -110,10 +110,10 @@ python reconciliation_report.py evd_data.json pdf_data.json report.xlsx
 python evd_extraction_project/evd_extractor.py data/evd_file.xlsx evd_data.json
 
 # 2. Extract PDFs
-python pdf_extraction_system/pdf_processor.py data/invoices/ pdf_data.json
+python pdf_extraction_project/pdf_processor.py data/invoices/ pdf_data.json
 
 # 3. Reconcile and report
-python reconciliation_system/reconciliation_report.py evd_data.json pdf_data.json reconciliation_report.xlsx
+python reconciliation_project/reconciliation_report.py evd_data.json pdf_data.json reconciliation_report.xlsx
 ```
 
 ## Example Output
@@ -229,7 +229,7 @@ The system automatically handles:
 ## File Structure
 
 ```
-reconciliation_system/
+reconciliation_project/
 ├── reconciliation_report.py    # Main report generator
 ├── pdf_evd_comparator.py      # Comparison logic
 ├── demo_evd_data.json         # Sample EVD data

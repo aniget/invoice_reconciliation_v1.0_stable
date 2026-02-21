@@ -271,7 +271,7 @@ print(f"Mismatches: {results['summary']['mismatches']}")
 ## Architecture
 
 ```
-pdf_extraction_system/
+pdf_extraction_project/
 ├── pdf_processor.py           # Main processor
 ├── extractors/
 │   ├── __init__.py

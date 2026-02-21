@@ -39,7 +39,7 @@ invoice_reconciliation/
 │   ├── batch_evd_extractor.py     # Batch processing
 │   └── requirements.txt
 │
-├── pdf_extraction_system/
+├── pdf_extraction_project/
 │   ├── pdf_processor.py           # Main PDF processor
 │   ├── extractors/
 │   │   ├── vendor_vivacom.py      # Vivacom template
@@ -47,7 +47,7 @@ invoice_reconciliation/
 │   │   └── generic_extractor.py   # Pattern-based fallback
 │   └── requirements.txt
 │
-├── reconciliation_system/
+├── reconciliation_project/
 │   ├── reconciliation_report.py   # Report generation
 │   └── pdf_evd_comparator.py      # Comparison logic
 │
@@ -98,7 +98,7 @@ data = extractor.process_folder("input_evd/")
 }
 ```
 
-### 2. PDF Extraction (`pdf_extraction_system/`)
+### 2. PDF Extraction (`pdf_extraction_project/`)
 
 **Purpose:** Extract invoice data from PDF files
 
@@ -164,7 +164,7 @@ class PDFInvoiceProcessor:
         }
 ```
 
-### 3. Reconciliation (`reconciliation_system/`)
+### 3. Reconciliation (`reconciliation_project/`)
 
 **Purpose:** Match EVD and PDF data, generate report
 
@@ -261,7 +261,7 @@ EVD_CONFIG = {
 ### PDF Extraction Config
 
 ```python
-# pdf_extraction_system/config.py
+# pdf_extraction_project/config.py
 
 PDF_CONFIG = {
     'confidence_threshold': 70,  # Minimum confidence to accept
@@ -273,7 +273,7 @@ PDF_CONFIG = {
 ### Reconciliation Config
 
 ```python
-# reconciliation_system/config.py
+# reconciliation_project/config.py
 
 RECONCILIATION_CONFIG = {
     'amount_tolerance_percent': 1.0,  # 1% tolerance
