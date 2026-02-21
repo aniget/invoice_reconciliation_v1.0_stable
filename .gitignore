@@ -1,0 +1,164 @@
+# Invoice Reconciliation System - .gitignore
+
+# Client Data - NEVER commit sensitive files
+*.pdf
+*.xlsx
+*.xlsm
+*.xls
+**/input_evd/**
+**/input_pdf/**
+**/output/**
+**/uploads/**
+evd_data*.json
+pdf_data*.json
+reconciliation_report*.xlsx
+demo_*.pdf
+demo_*.xlsx
+sample_*.pdf
+test_*.xlsx
+
+# Temporary directories
+temp/
+tmp/
+session_*/
+**/temp/**
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environment
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+.venv/
+
+# PyCharm
+.idea/
+*.iml
+*.iws
+.idea_modules/
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+postgresql_data/
+
+# Logs
+*.log
+logs/
+*.log.*
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Backup files
+*.bak
+*.backup
+*~
+*.swp
+*.swo
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.hypothesis/
+
+# Model files (large)
+*.pkl
+*.h5
+*.pt
+*.pth
+models/
+*.onnx
+
+# Documentation build
+docs/_build/
+site/
+
+# Cache
+.cache/
+*.cache
+
+# Node (if using any JS tooling)
+node_modules/
+package-lock.json
+
+# Gradio/Streamlit cache
+gradio_queue.db
+.streamlit/
+
+# OCR temp files
+tesseract_temp/
+ocr_cache/
+
+# Downloaded files
+downloads/
+
+# Development
+scratch/
+playground/
+experiments/
+
+# Archive files
+*.zip
+*.tar.gz
+*.rar
+*.7z
+archive/
+
+# Security
+*.key
+*.pem
+*.crt
+credentials.json
+secrets.json
+
+# Client-specific configurations
+config.local.json
+settings.local.json
