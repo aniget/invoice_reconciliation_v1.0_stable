@@ -434,7 +434,7 @@ pip install layoutlmv3
 ### Short-term (3-6 Months)
 
 4. 🧠 **Phase 2: CPU ML Model** (Planned)
-5. 📊 **Phase 4.2: API Development** (Planned)
+5.  **Phase 4.2: API Development** (Planned)
 6. 🔍 **Phase 4.3: More Vendor Templates** (Ongoing)
 
 ### Medium-term (6-12 Months)

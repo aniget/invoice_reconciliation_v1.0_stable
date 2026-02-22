@@ -352,14 +352,14 @@ logging.basicConfig(
 ```python
 # Debug extraction:
 data = extractor.extract(pdf_path)
-print(f"Confidence: {data['confidence']}")
-print(f"Method: {data['extraction_method']}")
-print(f"Found fields: {data.keys()}")
+logging.info(f"Confidence: {data['confidence']}")
+logging.info(f"Method: {data['extraction_method']}")
+logging.info(f"Found fields: {data.keys()}")
 
 # Check which fields are missing
 required = ['invoice_number', 'total_amount', 'vendor']
 missing = [f for f in required if not data.get(f)]
-print(f"Missing: {missing}")
+logging.info(f"Missing: {missing}")
 ```
 
 **Issue: No vendor match**
@@ -367,15 +367,15 @@ print(f"Missing: {missing}")
 ```python
 # Debug vendor detection:
 text = extract_text(pdf_path)
-print("Text sample:", text[:500])
+logging.info("Text sample:", text[:500])
 
 vendor = detect_vendor(text)
-print(f"Detected vendor: {vendor}")
+logging.info(f"Detected vendor: {vendor}")
 
 # Check vendor keywords
 for keyword in vendor_keywords:
     if keyword in text:
-        print(f"Found: {keyword}")
+        logging.info(f"Found: {keyword}")
 ```
 
 ## Performance Optimization

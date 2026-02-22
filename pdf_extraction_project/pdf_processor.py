@@ -17,10 +17,7 @@ from extractors.generic_extractor import GenericExtractor
 from extractors.vendor_yettel import YettelExtractor
 from extractors.vendor_vivacom import VivacomExtractor
 import sys
-sys.stdin.reconfigure(encoding='utf-8')
-sys.stdout.reconfigure(encoding='utf-8')
-sys.stderr.reconfigure(encoding='utf-8')
-
+import logging
 
 # Import vendor extractors
 sys.path.insert(0, str(Path(__file__).parent))
@@ -91,7 +88,8 @@ class PDFInvoiceProcessor:
                         text += page_text + "\n\n"
                 return text
         except Exception as e:
-            print(f"Error extracting text from {pdf_path.name}: {str(e)}")
+            logging.info(
+                f"Error extracting text from {pdf_path.name}: {str(e)}")
             return ""
 
     def extract_text_ocr(self, pdf_path: Path) -> str:
@@ -105,7 +103,7 @@ class PDFInvoiceProcessor:
             str: Extracted text via OCR
         """
         if not self.ocr_enabled:
-            print(f"  OCR not available, skipping")
+            logging.info(f"  OCR not available, skipping")
             return ""
 
         try:
@@ -113,7 +111,7 @@ class PDFInvoiceProcessor:
             from pdf2image import convert_from_path
             from PIL import ImageEnhance, ImageFilter
 
-            print(f"  Using OCR for {pdf_path.name}...")
+            logging.info(f"  Using OCR for {pdf_path.name}...")
 
             # Convert PDF to images
             images = convert_from_path(str(pdf_path), dpi=300)
@@ -141,12 +139,12 @@ class PDFInvoiceProcessor:
                 text += page_text + "\n\n"
 
             self.stats['ocr_used'] += 1
-            print(
+            logging.info(
                 f"  [SUCCESS] OCR completed ({len(text)} characters extracted)")
             return text
 
         except Exception as e:
-            print(f"  [ERROR] OCR failed: {str(e)}")
+            logging.info(f"  [ERROR] OCR failed: {str(e)}")
             return ""
 
     def detect_vendor(self, text: str, filename: str) -> Optional[str]:
@@ -188,12 +186,12 @@ class PDFInvoiceProcessor:
         """
         self.stats['total_processed'] += 1
 
-        print(f"Processing: {pdf_path.name}")
+        logging.info(f"Processing: {pdf_path.name}")
 
         # Extract text
         text = self.extract_text(pdf_path)
         if not text or len(text) < 50:
-            print(
+            logging.info(
                 f"  [ATTENTION] Insufficient text extracted ({len(text)} chars)")
 
             # Try OCR if available
@@ -201,7 +199,7 @@ class PDFInvoiceProcessor:
                 text = self.extract_text_ocr(pdf_path)
 
             if not text or len(text) < 50:
-                print(f"  [ERROR] Failed: Insufficient text extracted")
+                logging.info(f"  [ERROR] Failed: Insufficient text extracted")
                 self.stats['failed'] += 1
                 return {
                     'filename': pdf_path.name,
@@ -212,7 +210,7 @@ class PDFInvoiceProcessor:
 
         # Detect vendor
         vendor = self.detect_vendor(text, pdf_path.name)
-        print(f"  Detected vendor: {vendor or 'UNKNOWN'}")
+        logging.info(f"  Detected vendor: {vendor or 'UNKNOWN'}")
 
         # Extract data
         if vendor and vendor in self.vendor_extractors:
@@ -223,7 +221,7 @@ class PDFInvoiceProcessor:
 
             # Validate
             if hasattr(extractor, 'validate') and not extractor.validate(data):
-                print(
+                logging.info(
                     f"  [ATTENTION] Vendor template validation failed, using generic")
                 data = self.generic_extractor.extract(text, str(pdf_path))
                 data['extraction_method'] = 'generic_fallback'
@@ -253,13 +251,13 @@ class PDFInvoiceProcessor:
         amount = data.get('total_amount_eur', 0)
 
         if conf >= 80:
-            print(
+            logging.info(
                 f"  [SUCCESS] Success: {inv_num} - €{amount} (confidence: {conf}%)")
         elif conf >= 50:
-            print(
+            logging.info(
                 f"  [ATTENTION] Extracted: {inv_num} - €{amount} (confidence: {conf}%) - Review recommended")
         else:
-            print(
+            logging.info(
                 f"  [ERROR] Low confidence: {conf}% - Manual review required")
 
         return data
@@ -277,21 +275,20 @@ class PDFInvoiceProcessor:
         """
         folder_path = Path(folder_path)
 
-        print("="*80)
-        print("PDF Invoice Processor")
-        print("="*80)
-        print(f"Input folder: {folder_path}")
-        print()
+        logging.info("="*80)
+        logging.info("PDF Invoice Processor")
+        logging.info("="*80)
+        logging.info(f"Input folder: {folder_path}")
+        logging.info("")
 
-        # Find all PDF files
-        pdf_files = list(folder_path.glob('*.pdf')) + \
-            list(folder_path.glob('*.PDF'))
+        # Find all PDF files (*.pdf matches .pdf and .PDF on case-insensitive filesystems)
+        pdf_files = sorted(folder_path.glob('*.pdf'))
 
         if not pdf_files:
-            print("No PDF files found")
+            logging.info("No PDF files found")
             return {'invoices': [], 'summary': {}}
 
-        print(f"Found {len(pdf_files)} PDF file(s)\n")
+        logging.info(f"Found {len(pdf_files)} PDF file(s)\n")
 
         # Process each PDF
         results = []
@@ -300,7 +297,7 @@ class PDFInvoiceProcessor:
                 data = self.process_pdf(pdf_file)
                 results.append(data)
             except Exception as e:
-                print(f"  [ERROR] Error: {str(e)}")
+                logging.info(f"  [ERROR] Error: {str(e)}")
                 self.stats['failed'] += 1
                 results.append({
                     'filename': pdf_file.name,
@@ -308,7 +305,7 @@ class PDFInvoiceProcessor:
                     'error': str(e),
                     'confidence': 0
                 })
-            print()
+            logging.info("")
 
         # Structure results
         structured_results = self._structure_results(results)
@@ -367,22 +364,23 @@ class PDFInvoiceProcessor:
 
     def _print_summary(self):
         """Print processing summary."""
-        print("="*80)
-        print("PROCESSING SUMMARY")
-        print("="*80)
-        print(f"Total processed: {self.stats['total_processed']}")
-        print(f"Successful: {self.stats['successful']}")
-        print(f"Failed: {self.stats['failed']}")
+        logging.info("="*80)
+        logging.info("PROCESSING SUMMARY")
+        logging.info("="*80)
+        logging.info(f"Total processed: {self.stats['total_processed']}")
+        logging.info(f"Successful: {self.stats['successful']}")
+        logging.info(f"Failed: {self.stats['failed']}")
 
         if self.ocr_enabled and self.stats['ocr_used'] > 0:
-            print(f"OCR used: {self.stats['ocr_used']}")
+            logging.info(f"OCR used: {self.stats['ocr_used']}")
         elif not self.ocr_enabled:
-            print("OCR: Not available (install pytesseract and pdf2image)")
+            logging.info(
+                "OCR: Not available (install pytesseract and pdf2image)")
 
         if self.stats['by_vendor']:
-            print("\nBy Vendor:")
+            logging.info("\nBy Vendor:")
             for vendor, count in self.stats['by_vendor'].items():
-                print(f"  {vendor}: {count}")
+                logging.info(f"  {vendor}: {count}")
 
     def _save_results(self, results: Dict, output_path: Path):
         """Save results to JSON file."""
@@ -392,15 +390,16 @@ class PDFInvoiceProcessor:
         with open(output_path, 'w', encoding='utf-8') as f:
             json.dump(results, f, indent=2, ensure_ascii=False)
 
-        print(f"\n[SUCCESS] Results saved to: {output_path}")
+        logging.info(f"\n[SUCCESS] Results saved to: {output_path}")
 
 
 def main():
     """Main entry point."""
     if len(sys.argv) < 2:
-        print("Usage: python pdf_processor.py <pdf_folder> [output.json]")
-        print("\nExample:")
-        print("  python pdf_processor.py invoices/ extracted_data.json")
+        logging.info(
+            "Usage: python pdf_processor.py <pdf_folder> [output.json]")
+        logging.info("\nExample:")
+        logging.info("  python pdf_processor.py invoices/ extracted_data.json")
         sys.exit(1)
 
     input_folder = sys.argv[1]

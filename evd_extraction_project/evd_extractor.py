@@ -14,9 +14,7 @@ from pathlib import Path
 import openpyxl
 import json
 import sys
-sys.stdin.reconfigure(encoding='utf-8')
-sys.stdout.reconfigure(encoding='utf-8')
-sys.stderr.reconfigure(encoding='utf-8')
+import logging
 
 
 class EVDExtractor:
@@ -66,13 +64,13 @@ class EVDExtractor:
 
     def load_file(self):
         """Load the Excel workbook."""
-        print(f"Loading file: {self.file_path}")
+        logging.info(f"Loading file: {self.file_path}")
         self.workbook = openpyxl.load_workbook(self.file_path, data_only=True)
-        print(f"Opening file: {self.file_path}")
+        logging.info(f"Opening file: {self.file_path}")
 
         self.worksheet = self.workbook.active
-        print(f"  Sheet: {self.worksheet.title}")
-        print(f"  Dimensions: {self.worksheet.dimensions}")
+        logging.info(f"  Sheet: {self.worksheet.title}")
+        logging.info(f"  Dimensions: {self.worksheet.dimensions}")
 
     def find_data_start_row(self):
         """
@@ -85,10 +83,11 @@ class EVDExtractor:
                 if 'Invoice information' in cell_val or 'Информация за фактура' in cell_val:
                     # Data starts 2 rows after this header
                     self.data_start_row = row_idx + 2
-                    print(f"Found data start row: {self.data_start_row}")
+                    logging.info(
+                        f"Found data start row: {self.data_start_row}")
                     return
 
-        print(f"Using default data start row: {self.data_start_row}")
+        logging.info(f"Using default data start row: {self.data_start_row}")
 
     def normalize_vendor_name(self, vendor):
         """
@@ -129,7 +128,7 @@ class EVDExtractor:
         # Find the last row with data
         max_row = self.worksheet.max_row
 
-        print(
+        logging.info(
             f"\nExtracting invoice data from rows {self.data_start_row} to {max_row}...")
 
         for row_idx in range(self.data_start_row, max_row + 1):
@@ -185,10 +184,10 @@ class EVDExtractor:
             # Only add if we have at least invoice number and vendor
             if invoice['invoice_number'] and invoice['vendor_normalized']:
                 invoices.append(invoice)
-                print(
+                logging.info(
                     f"  Row {row_idx}: {invoice['vendor_normalized']} - {invoice['invoice_number']} - €{invoice['total_amount_eur']}")
 
-        print(f"\nExtracted {len(invoices)} invoice records")
+        logging.info(f"\nExtracted {len(invoices)} invoice records")
         return invoices
 
     def _format_date(self, date_val):
@@ -301,38 +300,41 @@ class EVDExtractor:
         output_path = Path(output_path)
         with open(output_path, 'w', encoding="utf-8") as f:
             json.dump(data, f, indent=2, ensure_ascii=False)
-        print(f"\nSaved to: {output_path}")
+        logging.info(f"\nSaved to: {output_path}")
 
     def print_summary(self, data):
         """Print a summary of extracted data."""
-        print("\n" + "="*80)
-        print("EXTRACTION SUMMARY")
-        print("="*80)
+        logging.info("\n" + "="*80)
+        logging.info("EXTRACTION SUMMARY")
+        logging.info("="*80)
 
         metadata = data['metadata']
-        print(f"Source file: {metadata['source_file']}")
-        print(f"Extraction date: {metadata['extraction_date']}")
-        print(f"Total invoices: {metadata['total_invoices']}")
-        print(f"Total vendors: {metadata['total_vendors']}")
-        print(f"Total amount (EUR): €{metadata['total_amount_eur']:,.2f}")
+        logging.info(f"Source file: {metadata['source_file']}")
+        logging.info(f"Extraction date: {metadata['extraction_date']}")
+        logging.info(f"Total invoices: {metadata['total_invoices']}")
+        logging.info(f"Total vendors: {metadata['total_vendors']}")
+        logging.info(
+            f"Total amount (EUR): €{metadata['total_amount_eur']:,.2f}")
 
-        print("\nBy Vendor:")
+        logging.info("\nBy Vendor:")
         for vendor, vendor_data in data['by_vendor'].items():
-            print(
+            logging.info(
                 f"  {vendor}: {vendor_data['invoice_count']} invoices, €{vendor_data['total_amount']:,.2f}")
 
 
 def main():
     """Main entry point."""
-    print("="*80)
-    print("EVD Data Extractor")
-    print("="*80)
+    logging.info("="*80)
+    logging.info("EVD Data Extractor")
+    logging.info("="*80)
 
     if len(sys.argv) < 2:
-        print("\nUsage: python evd_extractor.py <evd_file.xlsx> [output.json]")
-        print("\nExample:")
-        print("  python evd_extractor.py Zaiavka_za_plashtane.xlsx")
-        print("  python evd_extractor.py Zaiavka_za_plashtane.xlsx output_data.json")
+        logging.info(
+            "\nUsage: python evd_extractor.py <evd_file.xlsx> [output.json]")
+        logging.info("\nExample:")
+        logging.info("  python evd_extractor.py Zaiavka_za_plashtane.xlsx")
+        logging.info(
+            "  python evd_extractor.py Zaiavka_za_plashtane.xlsx output_data.json")
         sys.exit(1)
 
     input_file = sys.argv[1]
@@ -345,7 +347,7 @@ def main():
 
     try:
         # Extract data
-        print("Start extrating ...")
+        logging.info("Start extrating ...")
         extractor = EVDExtractor(input_file)
 
         data = extractor.extract_and_structure()
@@ -356,13 +358,13 @@ def main():
         # Save to JSON
         extractor.save_to_json(data, output_file)
 
-        print("\n[SUCCESS] Extraction completed successfully!")
+        logging.info("\n[SUCCESS] Extraction completed successfully!")
 
     except FileNotFoundError:
-        print(f"\n[ERROR] Error: File not found: {input_file}")
+        logging.info(f"\n[ERROR] Error: File not found: {input_file}")
         sys.exit(1)
     except Exception as e:
-        print(f"\n[ERROR] Error during extraction: {str(e)}")
+        logging.info(f"\n[ERROR] Error during extraction: {str(e)}")
         import traceback
         traceback.print_exc()
         sys.exit(1)

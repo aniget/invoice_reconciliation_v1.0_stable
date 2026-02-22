@@ -82,20 +82,20 @@ with open('your_file_extracted.json', 'r', encoding='utf-8') as f:
     data = json.load(f)
 
 # Get summary
-print(f"Total invoices: {data['metadata']['total_invoices']}")
-print(f"Total amount: €{data['metadata']['total_amount_eur']}")
+logging.info(f"Total invoices: {data['metadata']['total_invoices']}")
+logging.info(f"Total amount: €{data['metadata']['total_amount_eur']}")
 
 # Find all invoices from a vendor
 vendor_data = data['by_vendor']['ЙЕТТЕЛ БЪЛГАРИЯ']
-print(f"{vendor_data['vendor_name']}: {vendor_data['invoice_count']} invoices")
+logging.info(f"{vendor_data['vendor_name']}: {vendor_data['invoice_count']} invoices")
 
 # Look up specific invoice
 invoice = data['by_invoice_number']['4500127510'][0]
-print(f"Invoice: {invoice['invoice_number']}, Amount: €{invoice['total_amount_eur']}")
+logging.info(f"Invoice: {invoice['invoice_number']}, Amount: €{invoice['total_amount_eur']}")
 
 # Process all invoices
 for invoice in data['all_invoices']:
-    print(f"{invoice['vendor_normalized']}: {invoice['invoice_number']}")
+    logging.info(f"{invoice['vendor_normalized']}: {invoice['invoice_number']}")
 ```
 
 ### Compare with PDF Data
@@ -126,7 +126,7 @@ for invoice in data['all_invoices']:
 ### 2. Calculate Vendor Totals
 ```python
 for vendor, info in data['by_vendor'].items():
-    print(f"{vendor}: €{info['total_amount']:,.2f}")
+    logging.info(f"{vendor}: €{info['total_amount']:,.2f}")
 ```
 
 ### 3. Export to Excel
@@ -143,7 +143,7 @@ df.to_excel('invoices.xlsx', index=False)
 invoice_num = "4500127510"
 if invoice_num in data['by_invoice_number']:
     invoice = data['by_invoice_number'][invoice_num][0]
-    print(f"Found: {invoice['vendor_normalized']}, €{invoice['total_amount_eur']}")
+    logging.info(f"Found: {invoice['vendor_normalized']}, €{invoice['total_amount_eur']}")
 ```
 
 ---

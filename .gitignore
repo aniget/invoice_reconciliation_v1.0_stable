@@ -1,6 +1,7 @@
 # Invoice Reconciliation System - .gitignore
 
 # Client Data - NEVER commit sensitive files
+*.log
 *.pdf
 *.xlsx
 *.xlsm

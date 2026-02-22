@@ -15,9 +15,7 @@ from datetime import datetime
 import subprocess
 from pathlib import Path
 import sys
-sys.stdin.reconfigure(encoding='utf-8')
-sys.stdout.reconfigure(encoding='utf-8')
-sys.stderr.reconfigure(encoding='utf-8')
+import logging
 
 
 class ReconciliationWorkflow:
@@ -70,11 +68,12 @@ class ReconciliationWorkflow:
         for folder, description in folders:
             if not folder.exists():
                 folder.mkdir(parents=True, exist_ok=True)
-                print(f"  [SUCCESS] Created: {folder}/ (for {description})")
+                print(
+                    f"  [SUCCESS] Created: {folder}/ (for {description})")
             else:
                 print(f"  [SUCCESS] Exists: {folder}/")
 
-        print()
+        print("")
 
     def check_files(self):
         """Check if input files exist."""
@@ -85,9 +84,8 @@ class ReconciliationWorkflow:
             list(self.input_evd_folder.glob('*.xlsm')) + \
             list(self.input_evd_folder.glob('*.xls'))
 
-        # Count PDF files
-        pdf_files = list(self.input_pdf_folder.glob('*.pdf')) + \
-            list(self.input_pdf_folder.glob('*.PDF'))
+        # Count PDF files (*.pdf matches .pdf and .PDF on Windows)
+        pdf_files = sorted(self.input_pdf_folder.glob('*.pdf'))
 
         print(f"  EVD files found: {len(evd_files)}")
         if evd_files:
@@ -101,7 +99,7 @@ class ReconciliationWorkflow:
             if len(pdf_files) > 5:
                 print(f"    ... and {len(pdf_files) - 5} more")
 
-        print()
+        print("")
 
         if not evd_files and not pdf_files:
             print("[ATTENTION] Warning: No input files found!")
@@ -111,12 +109,14 @@ class ReconciliationWorkflow:
 
         if not evd_files:
             print("[ATTENTION] Warning: No EVD files found!")
-            print(f"  Please add EVD Excel files to: {self.input_evd_folder}")
+            print(
+                f"  Please add EVD Excel files to: {self.input_evd_folder}")
             return False
 
         if not pdf_files:
             print("[ATTENTION] Warning: No PDF files found!")
-            print(f"  Please add PDF invoices to: {self.input_pdf_folder}")
+            print(
+                f"  Please add PDF invoices to: {self.input_pdf_folder}")
             return False
 
         return True
@@ -152,7 +152,8 @@ class ReconciliationWorkflow:
             return False
         except FileNotFoundError:
             print(f"\n[ERROR] Script not found: {command[1]}")
-            print(f"  Make sure you're running from the correct directory\n")
+            print(
+                f"  Make sure you're running from the correct directory\n")
             return False
 
     def run(self):
@@ -160,7 +161,8 @@ class ReconciliationWorkflow:
         print("\n" + "="*80)
         print("COMPLETE EVD-PDF RECONCILIATION WORKFLOW")
         print("="*80)
-        print(f"Timestamp: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        print(
+            f"Timestamp: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
         print(f"Base directory: {self.base_dir}")
         print("="*80 + "\n")
 

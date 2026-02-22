@@ -323,7 +323,7 @@ for col_idx in range(1, 70):
     val = ws.cell(row=12, column=col_idx).value
     if val:
         col_letter = openpyxl.utils.get_column_letter(col_idx)
-        print(f"{col_letter} ({col_idx}): {val}")
+        logging.info(f"{col_letter} ({col_idx}): {val}")
 ```
 
 ## Integration Points

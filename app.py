@@ -11,15 +11,21 @@ Core features:
 - Download Excel report
 """
 
-import gradio as gr
-import os
-import shutil
-import json
-from pathlib import Path
-from datetime import datetime
-import subprocess
-import tempfile
 import traceback
+import tempfile
+import subprocess
+from datetime import datetime
+from pathlib import Path
+import json
+import shutil
+import os
+import gradio as gr
+import logging
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s", handlers=[
+                    logging.FileHandler("debug.log", encoding="utf-8"), logging.StreamHandler()], force=True)
+
+logging.info("TEST: Logging is working")
 
 
 class InvoiceReconciliationUI:
@@ -144,7 +150,7 @@ class InvoiceReconciliationUI:
         summary = f"""
 ✅ **Processing Complete!**
 
-📊 **Summary:**
+ **Summary:**
 - EVD Files Processed: {evd_count}
 - PDF Files Processed: {pdf_count}
 - Total EVD Invoices: {total_evd}
@@ -165,7 +171,7 @@ class InvoiceReconciliationUI:
         pdf_vendors = pdf_data.get('by_vendor', {})
 
         html = "<div style='padding: 20px; background: #f5f5f5; border-radius: 10px;'>"
-        html += "<h3>📊 Vendor Breakdown</h3>"
+        html += "<h3> Vendor Breakdown</h3>"
 
         html += "<h4>EVD Files:</h4><ul>"
         for vendor, data in list(evd_vendors.items())[:5]:
@@ -187,7 +193,7 @@ class InvoiceReconciliationUI:
 
         with gr.Blocks(title="Invoice Reconciliation System", theme=gr.themes.Soft()) as app:
             gr.Markdown("""
-            # 📊 Invoice Reconciliation System
+            #  Invoice Reconciliation System
             
             **Upload your EVD Excel files and PDF invoices to generate a detailed reconciliation report.**
             
@@ -261,7 +267,6 @@ class InvoiceReconciliationUI:
             """)
         # ⭐ REQUIRED for Gradio 3.x if progress is used
         app.queue()
-        app.launch(share=True)
 
         return app
 
@@ -276,7 +281,8 @@ def main():
         server_name="0.0.0.0",
         server_port=7860,
         share=False,
-        show_error=True
+        show_error=True,
+        debug=True
     )
 
 

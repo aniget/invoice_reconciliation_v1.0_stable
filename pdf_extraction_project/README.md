@@ -83,12 +83,12 @@ processor = PDFInvoiceProcessor()
 results = processor.process_folder(Path('invoices/'), Path('output.json'))
 
 # Access results
-print(f"Processed: {results['metadata']['total_invoices']}")
-print(f"Successful: {results['metadata']['successful']}")
+logging.info(f"Processed: {results['metadata']['total_invoices']}")
+logging.info(f"Successful: {results['metadata']['successful']}")
 
 # Get invoice by number
 invoice = results['by_invoice_number']['0063266046'][0]
-print(f"Amount: €{invoice['total_amount_eur']}")
+logging.info(f"Amount: €{invoice['total_amount_eur']}")
 ```
 
 ## Output Structure
@@ -264,8 +264,8 @@ from pdf_evd_comparator import EVDPDFComparator
 comparator = EVDPDFComparator()
 results = comparator.compare_datasets(evd_data, pdf_data)
 
-print(f"Matches: {results['summary']['matches']}")
-print(f"Mismatches: {results['summary']['mismatches']}")
+logging.info(f"Matches: {results['summary']['matches']}")
+logging.info(f"Mismatches: {results['summary']['mismatches']}")
 ```
 
 ## Architecture
@@ -347,10 +347,10 @@ from pdf_processor import PDFInvoiceProcessor
 processor = PDFInvoiceProcessor()
 data = processor.process_pdf(Path('test_invoice.pdf'))
 
-print(f"Vendor: {data['vendor_normalized']}")
-print(f"Invoice: {data['invoice_number']}")
-print(f"Amount: €{data['total_amount_eur']}")
-print(f"Confidence: {data['confidence']}%")
+logging.info(f"Vendor: {data['vendor_normalized']}")
+logging.info(f"Invoice: {data['invoice_number']}")
+logging.info(f"Amount: €{data['total_amount_eur']}")
+logging.info(f"Confidence: {data['confidence']}%")
 ```
 
 ## Support

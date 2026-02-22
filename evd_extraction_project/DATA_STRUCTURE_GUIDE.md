@@ -1,6 +1,6 @@
 # EVD Data Structure - Visual Guide
 
-## 📊 Complete Data Flow
+##  Complete Data Flow
 
 ```
 EVD Excel File
@@ -49,8 +49,8 @@ Ready for Comparison with PDF Data
 
 **Usage:**
 ```python
-print(f"Extracted {data['metadata']['total_invoices']} invoices")
-print(f"Total: €{data['metadata']['total_amount_eur']:,.2f}")
+logging.info(f"Extracted {data['metadata']['total_invoices']} invoices")
+logging.info(f"Total: €{data['metadata']['total_amount_eur']:,.2f}")
 ```
 
 ---
@@ -100,7 +100,7 @@ vendor_total = data['by_vendor']['ЙЕТТЕЛ БЪЛГАРИЯ']['total_amount'
 
 # List all vendors
 for vendor_name in data['by_vendor'].keys():
-    print(vendor_name)
+    logging.info(vendor_name)
 ```
 
 ---
@@ -141,15 +141,15 @@ for vendor_name in data['by_vendor'].keys():
 invoice_num = "4500127510"
 if invoice_num in data['by_invoice_number']:
     invoice = data['by_invoice_number'][invoice_num][0]
-    print(f"Amount: €{invoice['total_amount_eur']}")
+    logging.info(f"Amount: €{invoice['total_amount_eur']}")
 else:
-    print("Invoice not found")
+    logging.info("Invoice not found")
 
 # Check for duplicates
 invoice_num = "4500127510"
 count = len(data['by_invoice_number'][invoice_num])
 if count > 1:
-    print(f"Warning: {count} invoices with same number!")
+    logging.info(f"Warning: {count} invoices with same number!")
 ```
 
 ---
@@ -183,7 +183,7 @@ if count > 1:
 ```python
 # Process all invoices
 for invoice in data['all_invoices']:
-    print(f"{invoice['invoice_number']}: €{invoice['total_amount_eur']}")
+    logging.info(f"{invoice['invoice_number']}: €{invoice['total_amount_eur']}")
 
 # Convert to DataFrame
 import pandas as pd
@@ -244,7 +244,7 @@ vendor_name = "ЙЕТТЕЛ БЪЛГАРИЯ"
 if vendor_name in data['by_vendor']:
     invoices = data['by_vendor'][vendor_name]['invoices']
     total = data['by_vendor'][vendor_name]['total_amount']
-    print(f"{vendor_name}: {len(invoices)} invoices, €{total:,.2f}")
+    logging.info(f"{vendor_name}: {len(invoices)} invoices, €{total:,.2f}")
 
 # Method 2: Filtering all_invoices
 invoices = [inv for inv in data['all_invoices'] 
@@ -258,23 +258,23 @@ invoices = [inv for inv in data['all_invoices']
 invoice_num = "4500127510"
 if invoice_num in data['by_invoice_number']:
     invoice = data['by_invoice_number'][invoice_num][0]
-    print(f"Vendor: {invoice['vendor_normalized']}")
-    print(f"Amount: €{invoice['total_amount_eur']}")
+    logging.info(f"Vendor: {invoice['vendor_normalized']}")
+    logging.info(f"Amount: €{invoice['total_amount_eur']}")
 else:
-    print(f"Invoice {invoice_num} not found")
+    logging.info(f"Invoice {invoice_num} not found")
 ```
 
 ### Pattern 3: Generate Report
 
 ```python
 # Summary by vendor
-print("Vendor Summary:")
-print("-" * 50)
+logging.info("Vendor Summary:")
+logging.info("-" * 50)
 for vendor, info in data['by_vendor'].items():
-    print(f"{vendor:30} {info['invoice_count']:3} invoices  €{info['total_amount']:>10,.2f}")
+    logging.info(f"{vendor:30} {info['invoice_count']:3} invoices  €{info['total_amount']:>10,.2f}")
 
-print("-" * 50)
-print(f"{'TOTAL':30} {data['metadata']['total_invoices']:3} invoices  €{data['metadata']['total_amount_eur']:>10,.2f}")
+logging.info("-" * 50)
+logging.info(f"{'TOTAL':30} {data['metadata']['total_invoices']:3} invoices  €{data['metadata']['total_amount_eur']:>10,.2f}")
 ```
 
 ### Pattern 4: Export to Excel
@@ -311,9 +311,9 @@ pdf_numbers = set(pdf_data['by_invoice_number'].keys())
 only_in_evd = evd_numbers - pdf_numbers
 only_in_pdf = pdf_numbers - evd_numbers
 
-print(f"Only in EVD: {len(only_in_evd)}")
-print(f"Only in PDF: {len(only_in_pdf)}")
-print(f"In both: {len(evd_numbers & pdf_numbers)}")
+logging.info(f"Only in EVD: {len(only_in_evd)}")
+logging.info(f"Only in PDF: {len(only_in_pdf)}")
+logging.info(f"In both: {len(evd_numbers & pdf_numbers)}")
 ```
 
 ---
@@ -360,7 +360,7 @@ if 'Йеттел България ЕАД' in data['by_vendor']:
 if invoice_num in data['by_invoice_number']:
     invoice = data['by_invoice_number'][invoice_num][0]
 else:
-    print("Not found")
+    logging.info("Not found")
 
 # [ERROR] Bad - will crash
 invoice = data['by_invoice_number'][invoice_num][0]

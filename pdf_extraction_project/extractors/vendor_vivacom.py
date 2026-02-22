@@ -143,7 +143,7 @@ class VivacomExtractor:
         # Calculate confidence
         data['confidence'] = self._calculate_confidence(data)
 
-        print(
+        logging.info(
             f"WWWWWWWWWWWWWWWWWW Extracted total amount in EUR: {data['total_amount_eur']}")
 
         return data
@@ -334,13 +334,13 @@ if __name__ == "__main__":
 
     extractor = VivacomExtractor()
 
-    print("Detection test:")
-    print(f"  Is Vivacom invoice: {extractor.detect(sample_text)}")
+    logging.info("Detection test:")
+    logging.info(f"  Is Vivacom invoice: {extractor.detect(sample_text)}")
 
-    print("\nExtraction test:")
+    logging.info("\nExtraction test:")
     data = extractor.extract(sample_text)
 
     for key, value in data.items():
-        print(f"  {key}: {value}")
+        logging.info(f"  {key}: {value}")
 
-    print(f"\nValidation: {extractor.validate(data)}")
+    logging.info(f"\nValidation: {extractor.validate(data)}")

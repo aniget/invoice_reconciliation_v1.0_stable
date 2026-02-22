@@ -13,10 +13,7 @@ import json
 from pathlib import Path
 from evd_extractor import EVDExtractor
 import sys
-sys.stdin.reconfigure(encoding='utf-8')
-sys.stdout.reconfigure(encoding='utf-8')
-sys.stderr.reconfigure(encoding='utf-8')
-
+import logging
 
 # Import the single-file extractor
 sys.path.insert(0, str(Path(__file__).parent))
@@ -74,17 +71,17 @@ class BatchEVDProcessor:
         Returns:
             dict: Combined structured data from all files
         """
-        print("="*80)
-        print("BATCH EVD EXTRACTOR")
-        print("="*80)
-        print(f"Input folder: {self.input_folder}")
-        print()
+        logging.info("="*80)
+        logging.info("BATCH EVD EXTRACTOR")
+        logging.info("="*80)
+        logging.info(f"Input folder: {self.input_folder}")
+        logging.info("")
 
         # Find all EVD files
         evd_files = self.find_evd_files()
 
         if not evd_files:
-            print("No Excel files found in input folder")
+            logging.info("No Excel files found in input folder")
             return {
                 'metadata': {'total_invoices': 0},
                 'by_vendor': {},
@@ -92,17 +89,17 @@ class BatchEVDProcessor:
                 'all_invoices': []
             }
 
-        print(f"Found {len(evd_files)} Excel file(s):\n")
+        logging.info(f"Found {len(evd_files)} Excel file(s):\n")
         for f in evd_files:
-            print(f"  - {f.name}")
-        print()
+            logging.info(f"  - {f.name}")
+        logging.info("")
 
         # Process each file
         all_invoices = []
 
         for evd_file in evd_files:
             try:
-                print(f"Processing: {evd_file.name}")
+                logging.info(f"Processing: {evd_file.name}")
 
                 extractor = EVDExtractor(evd_file)
                 file_data = extractor.extract_and_structure()
@@ -120,16 +117,17 @@ class BatchEVDProcessor:
                     'total_amount': file_data['metadata']['total_amount_eur']
                 }
 
-                print(
+                logging.info(
                     f"  [SUCCESS] Extracted {file_data['metadata']['total_invoices']} invoices")
-                print(
+                logging.info(
                     f"    Total: €{file_data['metadata']['total_amount_eur']:,.2f}")
-                print()
+                logging.info("")
 
             except Exception as e:
-                print(f"  [ERROR] Error processing {evd_file.name}: {str(e)}")
+                logging.info(
+                    f"  [ERROR] Error processing {evd_file.name}: {str(e)}")
                 self.stats['files_failed'] += 1
-                print()
+                logging.info("")
 
         # Combine all results
         combined_data = self._combine_results(all_invoices)
@@ -202,25 +200,25 @@ class BatchEVDProcessor:
 
     def _print_summary(self, data: dict):
         """Print processing summary."""
-        print("="*80)
-        print("BATCH PROCESSING SUMMARY")
-        print("="*80)
+        logging.info("="*80)
+        logging.info("BATCH PROCESSING SUMMARY")
+        logging.info("="*80)
 
         metadata = data['metadata']
-        print(f"Files processed: {metadata['files_processed']}")
-        print(f"Files failed: {metadata['files_failed']}")
-        print(f"Total invoices: {metadata['total_invoices']}")
-        print(f"Total vendors: {metadata['total_vendors']}")
-        print(f"Total amount: €{metadata['total_amount_eur']:,.2f}")
+        logging.info(f"Files processed: {metadata['files_processed']}")
+        logging.info(f"Files failed: {metadata['files_failed']}")
+        logging.info(f"Total invoices: {metadata['total_invoices']}")
+        logging.info(f"Total vendors: {metadata['total_vendors']}")
+        logging.info(f"Total amount: €{metadata['total_amount_eur']:,.2f}")
 
-        print("\nBy File:")
+        logging.info("\nBy File:")
         for filename, file_info in metadata['files'].items():
-            print(
+            logging.info(
                 f"  {filename}: {file_info['invoice_count']} invoices, €{file_info['total_amount']:,.2f}")
 
-        print("\nBy Vendor:")
+        logging.info("\nBy Vendor:")
         for vendor, vendor_data in data['by_vendor'].items():
-            print(
+            logging.info(
                 f"  {vendor}: {vendor_data['invoice_count']} invoices, €{vendor_data['total_amount']:,.2f}")
 
     def _save_results(self, data: dict, output_path: Path):
@@ -231,20 +229,22 @@ class BatchEVDProcessor:
         with open(output_path, 'w', encoding="utf-8") as f:
             json.dump(data, f, indent=2, ensure_ascii=False)
 
-        print(f"\n[SUCCESS] Results saved to: {output_path}")
+        logging.info(f"\n[SUCCESS] Results saved to: {output_path}")
 
 
 def main():
     """Main entry point."""
-    print("\n")
+    logging.info("\n")
 
     if len(sys.argv) < 2:
-        print(
+        logging.info(
             "Usage: python batch_evd_extractor.py <input_folder> [output.json]")
-        print("\nExample:")
-        print("  python batch_evd_extractor.py input_evd/")
-        print("  python batch_evd_extractor.py input_evd/ combined_evd_data.json")
-        print("\nThe script will process all Excel files in the input folder.")
+        logging.info("\nExample:")
+        logging.info("  python batch_evd_extractor.py input_evd/")
+        logging.info(
+            "  python batch_evd_extractor.py input_evd/ combined_evd_data.json")
+        logging.info(
+            "\nThe script will process all Excel files in the input folder.")
         sys.exit(1)
 
     input_folder = Path(sys.argv[1])
@@ -256,15 +256,15 @@ def main():
 
     # Check if input folder exists
     if not input_folder.exists():
-        print(f"[ERROR] Error: Input folder not found: {input_folder}")
-        print(f"\nCreating folder: {input_folder}")
+        logging.info(f"[ERROR] Error: Input folder not found: {input_folder}")
+        logging.info(f"\nCreating folder: {input_folder}")
         input_folder.mkdir(parents=True, exist_ok=True)
-        print(
+        logging.info(
             f"[SUCCESS] Folder created. Please add EVD Excel files to: {input_folder}")
         sys.exit(1)
 
     if not input_folder.is_dir():
-        print(f"[ERROR] Error: {input_folder} is not a directory")
+        logging.info(f"[ERROR] Error: {input_folder} is not a directory")
         sys.exit(1)
 
     try:
@@ -272,12 +272,12 @@ def main():
         processor = BatchEVDProcessor(input_folder)
         results = processor.process_folder(output_file)
 
-        print("\n[SUCCESS] Batch processing completed successfully!")
+        logging.info("\n[SUCCESS] Batch processing completed successfully!")
 
         return 0
 
     except Exception as e:
-        print(f"\n[ERROR] Error during batch processing: {str(e)}")
+        logging.info(f"\n[ERROR] Error during batch processing: {str(e)}")
         import traceback
         traceback.print_exc()
         sys.exit(1)

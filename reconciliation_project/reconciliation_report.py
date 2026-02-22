@@ -15,6 +15,10 @@ from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 from openpyxl.utils import get_column_letter
 import sys
+import logging
+
+# Import and use comparator
+from pdf_evd_comparator import EVDPDFComparator
 
 
 class ReconciliationReportGenerator:
@@ -23,7 +27,7 @@ class ReconciliationReportGenerator:
     Compares EVD data with PDF extractions and highlights discrepancies.
     """
 
-    def __init__(self):
+    def __init__(self, amount_tolerance=0.01):
         """Initialize report generator with styling."""
         self.wb = None
 
@@ -63,7 +67,7 @@ class ReconciliationReportGenerator:
         if 'Sheet' in self.wb.sheetnames:
             self.wb.remove(self.wb['Sheet'])
 
-        print("Generating reconciliation report...")
+        logging.info("Generating reconciliation report...")
 
         # Create sheets
         self._create_summary_sheet(evd_data, pdf_data, comparison_results)
@@ -76,7 +80,7 @@ class ReconciliationReportGenerator:
 
         # Save workbook
         self.wb.save(output_path)
-        print(f"[SUCCESS] Reconciliation report saved: {output_path}")
+        logging.info(f"[SUCCESS] Reconciliation report saved: {output_path}")
 
     def _create_summary_sheet(self, evd_data: dict, pdf_data: dict, comparison_results: dict):
         """Create summary overview sheet."""
@@ -180,9 +184,10 @@ class ReconciliationReportGenerator:
         """Create sheet for perfect matches."""
         ws = self.wb.create_sheet("Matches")
 
-        # Headers
+        # Headers: add Note for sign convention (expense/credit)
         headers = ['Vendor', 'Invoice Number', 'EVD Date', 'PDF Date',
-                   'EVD Amount (EUR)', 'PDF Amount (EUR)', 'Confidence Score', 'EVD File', 'PDF File']
+                   'EVD Amount (EUR)', 'PDF Amount (EUR)', 'Confidence Score',
+                   'Amount note', 'EVD File', 'PDF File']
 
         for col_idx, header in enumerate(headers, 1):
             cell = ws.cell(row=1, column=col_idx, value=header)
@@ -196,35 +201,46 @@ class ReconciliationReportGenerator:
         for match in comparison_results['matches']:
             evd = match['evd']
             pdf = match['pdf']
+            evd_amt = evd['total_amount_eur']
+            pdf_amt = pdf.get('total_amount_eur', 0) if pdf else 0
 
             ws.cell(row=row, column=1, value=evd['vendor_normalized'])
             ws.cell(row=row, column=2, value=evd['invoice_number'])
             ws.cell(row=row, column=3, value=evd.get('invoice_date', ''))
-            ws.cell(row=row, column=4, value=pdf.get('invoice_date', ''))
-            ws.cell(row=row, column=5, value=evd['total_amount_eur'])
-            ws.cell(row=row, column=6, value=pdf.get('total_amount_eur', 0))
+            ws.cell(row=row, column=4, value=pdf.get(
+                'invoice_date', '') if pdf else '')
+            ws.cell(row=row, column=5, value=evd_amt)
+            ws.cell(row=row, column=6, value=pdf_amt)
             ws.cell(row=row, column=7, value=match.get('confidence', 100))
-            ws.cell(row=row, column=8, value=evd.get('file', ''))
-            ws.cell(row=row, column=9, value=pdf.get('filename', ''))
+            # Note when signs differ: expense (EVD − = PDF +) or vendor credit (EVD + = PDF −)
+            if evd_amt is not None and pdf_amt is not None:
+                if (evd_amt < 0 and pdf_amt > 0) or (evd_amt > 0 and pdf_amt < 0):
+                    ws.cell(
+                        row=row, column=8, value='Same amount: EVD and PDF use opposite sign (expense/credit convention)')
+            ws.cell(row=row, column=9, value=evd.get(
+                'source_file') or evd.get('file', ''))
+            ws.cell(row=row, column=10, value=pdf.get(
+                'filename', '') if pdf else '')
 
             # Format amounts
             ws.cell(row=row, column=5).number_format = '€#,##0.00'
             ws.cell(row=row, column=6).number_format = '€#,##0.00'
 
             # Apply border and green fill
-            for col in range(1, 10):
+            for col in range(1, 11):
                 ws.cell(row=row, column=col).border = self.border
                 ws.cell(row=row, column=col).fill = self.match_fill
 
             row += 1
 
         # Auto-size columns
-        for col in range(1, 10):
+        for col in range(1, 11):
             ws.column_dimensions[get_column_letter(col)].width = 15
 
         ws.column_dimensions['A'].width = 25  # Vendor
-        ws.column_dimensions['H'].width = 35  # EVD File
-        ws.column_dimensions['I'].width = 35  # PDF File
+        ws.column_dimensions['H'].width = 50  # Amount note
+        ws.column_dimensions['I'].width = 35  # EVD File
+        ws.column_dimensions['J'].width = 35  # PDF File
 
     def _create_mismatches_sheet(self, comparison_results: dict):
         """Create sheet for mismatches with discrepancies."""
@@ -245,19 +261,22 @@ class ReconciliationReportGenerator:
         for mismatch in comparison_results['mismatches']:
             evd = mismatch['evd']
             pdf = mismatch['pdf']
+            pdf_amt = pdf.get('total_amount_eur', 0) if pdf else 0
 
             ws.cell(row=row, column=1, value=evd['vendor_normalized'])
             ws.cell(row=row, column=2, value=evd['invoice_number'])
             ws.cell(row=row, column=3, value=evd['total_amount_eur'])
-            ws.cell(row=row, column=4, value=pdf.get('total_amount_eur', 0))
+            ws.cell(row=row, column=4, value=pdf_amt)
 
-            # Calculate difference
-            diff = abs(evd['total_amount_eur'] -
-                       pdf.get('total_amount_eur', 0))
+            # Difference from discrepancy if present, else raw difference
+            discrepancies = mismatch.get('discrepancies', [])
+            amount_disc = next(
+                (d for d in discrepancies if d.get('type') == 'amount'), None)
+            diff = amount_disc['difference'] if amount_disc else abs(
+                evd['total_amount_eur'] - pdf_amt)
             ws.cell(row=row, column=5, value=diff)
 
             # Discrepancy details
-            discrepancies = mismatch.get('discrepancies', [])
             disc_types = ', '.join([d['type'] for d in discrepancies])
             disc_details = '; '.join(
                 [self._format_discrepancy(d) for d in discrepancies])
@@ -493,11 +512,14 @@ class ReconciliationReportGenerator:
         """Add a comparison row to detailed sheet."""
         ws.cell(row=row, column=1, value=status)
 
+        evd_amt = evd.get('total_amount_eur', 0) if evd else None
+        pdf_amt = pdf.get('total_amount_eur', 0) if pdf else None
+
         if evd:
             ws.cell(row=row, column=2, value=evd.get('vendor_normalized', ''))
             ws.cell(row=row, column=3, value=evd.get('invoice_number', ''))
             ws.cell(row=row, column=4, value=evd.get('invoice_date', ''))
-            ws.cell(row=row, column=6, value=evd.get('total_amount_eur', 0))
+            ws.cell(row=row, column=6, value=evd_amt)
             ws.cell(row=row, column=9, value=evd.get('currency', 'EUR'))
 
         if pdf:
@@ -506,13 +528,12 @@ class ReconciliationReportGenerator:
                     'vendor_normalized', ''))
                 ws.cell(row=row, column=3, value=pdf.get('invoice_number', ''))
             ws.cell(row=row, column=5, value=pdf.get('invoice_date', ''))
-            ws.cell(row=row, column=7, value=pdf.get('total_amount_eur', 0))
+            ws.cell(row=row, column=7, value=pdf_amt)
             ws.cell(row=row, column=10, value=pdf.get('currency', 'EUR'))
 
-        # Calculate difference
-        if evd and pdf:
-            diff = abs(evd.get('total_amount_eur', 0) -
-                       pdf.get('total_amount_eur', 0))
+        # Difference: 0 when amounts match under EVD sign rules (expense/credit convention)
+        if evd and pdf and evd_amt is not None and pdf_amt is not None:
+            diff = abs(evd_amt - pdf_amt)
             ws.cell(row=row, column=8, value=diff)
             ws.cell(row=row, column=8).number_format = '€#,##0.00'
 
@@ -532,14 +553,16 @@ class ReconciliationReportGenerator:
 
 def main():
     """Main execution - load data and generate report."""
-    print("="*80)
-    print("EVD-PDF Reconciliation System")
-    print("="*80)
+    logging.info("="*80)
+    logging.info("EVD-PDF Reconciliation System")
+    logging.info("="*80)
 
     if len(sys.argv) < 4:
-        print("\nUsage: python reconciliation_report.py <evd_data.json> <pdf_data.json> <output.xlsx>")
-        print("\nExample:")
-        print("  python reconciliation_report.py evd_extracted.json pdf_extracted.json reconciliation.xlsx")
+        logging.info(
+            "\nUsage: python reconciliation_report.py <evd_data.json> <pdf_data.json> <output.xlsx>")
+        logging.info("\nExample:")
+        logging.info(
+            "  python reconciliation_report.py evd_extracted.json pdf_extracted.json reconciliation.xlsx")
         sys.exit(1)
 
     evd_file = Path(sys.argv[1])
@@ -547,19 +570,16 @@ def main():
     output_file = Path(sys.argv[3])
 
     # Load data
-    print(f"\nLoading EVD data from: {evd_file}")
+    logging.info(f"\nLoading EVD data from: {evd_file}")
     with open(evd_file, 'r', encoding="utf-8") as f:
         evd_data = json.load(f)
 
-    print(f"Loading PDF data from: {pdf_file}")
+    logging.info(f"Loading PDF data from: {pdf_file}")
     with open(pdf_file, 'r', encoding="utf-8") as f:
         pdf_data = json.load(f)
 
-    # Import and use comparator
-    from pdf_evd_comparator import EVDPDFComparator
-
     # Compare
-    print("\nComparing datasets...")
+    logging.info("\nComparing datasets...")
     comparator = EVDPDFComparator(amount_tolerance=0.01)
     comparison_results = comparator.compare_datasets(evd_data, pdf_data)
 
@@ -567,25 +587,27 @@ def main():
     comparator.print_comparison_summary(comparison_results)
 
     # Generate Excel report
-    print(f"\nGenerating Excel report...")
+    logging.info(f"\nGenerating Excel report...")
     generator = ReconciliationReportGenerator()
     generator.generate_report(
         evd_data, pdf_data, comparison_results, output_file)
 
-    print(f"\n{'='*80}")
-    print("RECONCILIATION COMPLETE")
-    print(f"{'='*80}")
-    print(f"Excel report: {output_file}")
-    print(f"\nSummary:")
-    print(
+    logging.info(f"\n{'='*80}")
+    logging.info("RECONCILIATION COMPLETE")
+    logging.info(f"{'='*80}")
+    logging.info(f"Excel report: {output_file}")
+    logging.info(f"\nSummary:")
+    logging.info(
         f"  Total EVD invoices: {comparison_results['summary']['total_evd']}")
-    print(
+    logging.info(
         f"  Total PDF invoices: {comparison_results['summary']['total_pdf']}")
-    print(f"  Perfect matches: {comparison_results['summary']['matches']}")
-    print(f"  Mismatches: {comparison_results['summary']['mismatches']}")
-    print(
+    logging.info(
+        f"  Perfect matches: {comparison_results['summary']['matches']}")
+    logging.info(
+        f"  Mismatches: {comparison_results['summary']['mismatches']}")
+    logging.info(
         f"  Missing in PDF: {comparison_results['summary']['missing_in_pdf']}")
-    print(
+    logging.info(
         f"  Missing in EVD: {comparison_results['summary']['missing_in_evd']}")
 
 

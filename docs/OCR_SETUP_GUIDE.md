@@ -167,28 +167,28 @@ import pytesseract
 from pdf2image import convert_from_path
 from PIL import Image
 
-print("Testing OCR Setup...")
+logging.info("Testing OCR Setup...")
 
 # Test 1: Tesseract version
 try:
     version = pytesseract.get_tesseract_version()
-    print(f"[SUCCESS] Tesseract version: {version}")
+    logging.info(f"[SUCCESS] Tesseract version: {version}")
 except Exception as e:
-    print(f"[ERROR] Tesseract not found: {e}")
+    logging.info(f"[ERROR] Tesseract not found: {e}")
     exit(1)
 
 # Test 2: Languages available
 try:
     langs = pytesseract.get_languages()
-    print(f"[SUCCESS] Available languages: {', '.join(langs)}")
+    logging.info(f"[SUCCESS] Available languages: {', '.join(langs)}")
     
     if 'bul' in langs:
-        print("[SUCCESS] Bulgarian language pack installed")
+        logging.info("[SUCCESS] Bulgarian language pack installed")
     else:
-        print("[ATTENTION] Bulgarian language pack NOT found")
-        print("  Install from: https://github.com/tesseract-ocr/tessdata")
+        logging.info("[ATTENTION] Bulgarian language pack NOT found")
+        logging.info("  Install from: https://github.com/tesseract-ocr/tessdata")
 except Exception as e:
-    print(f"[ATTENTION] Could not get languages: {e}")
+    logging.info(f"[ATTENTION] Could not get languages: {e}")
 
 # Test 3: PDF to image conversion
 try:
@@ -200,11 +200,11 @@ try:
     
     # OCR the image
     text = pytesseract.image_to_string(img, lang='eng+bul')
-    print(f"[SUCCESS] OCR test successful: '{text.strip()}'")
+    logging.info(f"[SUCCESS] OCR test successful: '{text.strip()}'")
 except Exception as e:
-    print(f"[ERROR] OCR test failed: {e}")
+    logging.info(f"[ERROR] OCR test failed: {e}")
 
-print("\n[SUCCESS] All checks passed! OCR is ready to use.")
+logging.info("\n[SUCCESS] All checks passed! OCR is ready to use.")
 ```
 
 Run the test:
@@ -253,9 +253,9 @@ processor = PDFInvoiceProcessor()
 
 # Check if OCR is available
 if processor.ocr_enabled:
-    print("OCR is available")
+    logging.info("OCR is available")
 else:
-    print("OCR not available")
+    logging.info("OCR not available")
 
 # Process with OCR explicitly
 text = processor.extract_text_ocr(Path('scanned_invoice.pdf'))
@@ -406,7 +406,7 @@ data = pytesseract.image_to_data(image, output_type=pytesseract.Output.DICT)
 # Check confidence for each word
 for i, conf in enumerate(data['conf']):
     if int(conf) > 60:  # Only accept >60% confidence
-        print(data['text'][i])
+        logging.info(data['text'][i])
 ```
 
 ### Batch OCR Processing
@@ -416,7 +416,7 @@ for i, conf in enumerate(data['conf']):
 from pathlib import Path
 
 for pdf_file in Path('scanned_invoices/').glob('*.pdf'):
-    print(f"Processing: {pdf_file}")
+    logging.info(f"Processing: {pdf_file}")
     text = processor.extract_text_ocr(pdf_file)
     # ... process text
 ```
@@ -570,7 +570,7 @@ from pdf_processor import PDFInvoiceProcessor
 processor = PDFInvoiceProcessor()
 
 # Check OCR availability
-print(f"OCR enabled: {processor.ocr_enabled}")
+logging.info(f"OCR enabled: {processor.ocr_enabled}")
 
 # Process PDFs (OCR automatic)
 processor.process_folder('invoices/', 'output.json')
@@ -586,7 +586,7 @@ tesseract --version
 pdftoppm -v
 
 # Test in Python
-python -c "import pytesseract; print(pytesseract.get_tesseract_version())"
+python -c "import pytesseract; logging.info(pytesseract.get_tesseract_version())"
 ```
 
 ---
