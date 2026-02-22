@@ -1,39 +1,29 @@
 """
-EVD-PDF Comparison Utility (Refactored & Clean Architecture)
+EVD-PDF Comparison Utility
 
-Responsibilities:
-- Normalize data
-- Compare datasets
-- Return structured comparison results
-- No formatting / no Excel logic
-
-Author: EVD Extraction Team
+Compares extracted EVD data with PDF invoice data to find matches and discrepancies.
+This module is both:
+- a reusable comparison library
+- a CLI entrypoint when run as a script
 """
 
 import json
-from pathlib import Path
-import re
 import logging
+import re
+from pathlib import Path
 
 
 class EVDPDFComparator:
-
     def __init__(self, amount_tolerance=0.01):
         self.amount_tolerance = amount_tolerance
-
-    # -------------------------
-    # NORMALIZATION UTILITIES
-    # -------------------------
 
     def normalize_invoice_number(self, invoice_num):
         if not invoice_num:
             return ""
-
-        invoice_num = str(invoice_num).upper().strip()
-        invoice_num = re.sub(
-            r'^(INV|INVOICE|DOC|FAKTURA|№|NO\.?|#)\s*[-:]?\s*', '', invoice_num)
-        invoice_num = re.sub(r'[^\w\d]', '', invoice_num)
-        return invoice_num
+        s = str(invoice_num).upper().strip()
+        s = re.sub(r'^(INV|INVOICE|DOC|FAKTURA|№|NO\.?|#)\s*[-:]?\s*', '', s)
+        s = re.sub(r'[^\w\d]', '', s)
+        return s
 
     def normalize_amount(self, value):
         try:
@@ -41,17 +31,13 @@ class EVDPDFComparator:
         except (ValueError, TypeError):
             return 0.0
 
-    # -------------------------
-    # MATCHING RULES
-    # -------------------------
+    def amounts_match(self, a, b):
+        return abs(a - b) <= self.amount_tolerance
 
-    def amounts_match(self, amount1, amount2):
-        return abs(amount1 - amount2) <= self.amount_tolerance
-
-    def amounts_consistent_with_evd_sign_rules(self, evd_amount, pdf_amount):
-        evd = self.normalize_amount(evd_amount)
-        pdf = self.normalize_amount(pdf_amount)
-
+    def amounts_consistent(self, evd_amt, pdf_amt):
+        # match absolute, match sign flipped, match magnitude differences
+        evd = self.normalize_amount(evd_amt)
+        pdf = self.normalize_amount(pdf_amt)
         if self.amounts_match(evd, pdf):
             return True
         if self.amounts_match(abs(evd), pdf):
@@ -60,73 +46,46 @@ class EVDPDFComparator:
             return True
         return False
 
-    def fuzzy_vendor_match(self, vendor1, vendor2):
-        if not vendor1 or not vendor2:
+    def fuzzy_vendor_match(self, v1, v2):
+        if not v1 or not v2:
             return 0.0
-
-        v1 = vendor1.upper()
-        v2 = vendor2.upper()
-
-        if v1 == v2:
+        w1, w2 = v1.upper(), v2.upper()
+        if w1 == w2:
             return 1.0
-
-        if v1 in v2 or v2 in v1:
+        if w1 in w2 or w2 in w1:
             return 0.8
-
-        words1 = set(v1.split())
-        words2 = set(v2.split())
-        if not words1 or not words2:
+        s1, s2 = set(w1.split()), set(w2.split())
+        if not s1 or not s2:
             return 0.0
+        return len(s1 & s2) / len(s1 | s2)
 
-        return len(words1 & words2) / len(words1 | words2)
+    def find_matching_pdf(self, evd, pdf_list):
+        evd_inv = self.normalize_invoice_number(evd.get("invoice_number"))
+        evd_amt = self.normalize_amount(evd.get("total_amount_eur"))
+        evd_vendor = evd.get("vendor_normalized", "")
+        best_match, best_score = None, 0
 
-    # -------------------------
-    # CORE MATCHING
-    # -------------------------
-
-    def find_matching_pdf(self, evd_invoice, pdf_candidates):
-
-        evd_inv = self.normalize_invoice_number(
-            evd_invoice.get("invoice_number"))
-        evd_amt = self.normalize_amount(
-            evd_invoice.get("total_amount_eur"))
-        evd_vendor = evd_invoice.get("vendor_normalized", "")
-
-        best_match = None
-        best_score = 0
-
-        for pdf in pdf_candidates:
+        for pdf in pdf_list:
+            pdf_inv = self.normalize_invoice_number(pdf.get("invoice_number"))
+            pdf_amt = self.normalize_amount(pdf.get("total_amount_eur", 0))
+            vendor_score = self.fuzzy_vendor_match(
+                evd_vendor, pdf.get("vendor_normalized", "")
+            )
             score = 0
-
-            pdf_inv = self.normalize_invoice_number(
-                pdf.get("invoice_number"))
-            pdf_amt = self.normalize_amount(
-                pdf.get("total_amount_eur"))
-            pdf_vendor = pdf.get("vendor_normalized", "")
-
-            if evd_inv and pdf_inv and evd_inv == pdf_inv:
+            if evd_inv and pdf_inv == evd_inv:
                 score += 50
-
-            if self.amounts_consistent_with_evd_sign_rules(evd_amt, pdf_amt):
+            if self.amounts_consistent(evd_amt, pdf_amt):
                 score += 30
-
-            score += self.fuzzy_vendor_match(evd_vendor, pdf_vendor) * 20
+            score += vendor_score * 20
 
             if score > best_score:
-                best_score = score
-                best_match = pdf
+                best_score, best_match = score, pdf
 
         if best_score < 50:
             return None, 0
-
         return best_match, best_score
 
-    # -------------------------
-    # MAIN COMPARISON
-    # -------------------------
-
     def compare_datasets(self, evd_data, pdf_data):
-
         evd_list = evd_data.get("all_invoices", [])
         pdf_list = pdf_data.get("all_invoices", [])
 
@@ -136,11 +95,11 @@ class EVDPDFComparator:
                 "total_pdf": len({(
                     p.get("vendor_normalized"),
                     self.normalize_invoice_number(p.get("invoice_number"))
-                ) for p in pdf_list}),  # UNIQUE COUNT
+                ) for p in pdf_list}),
                 "matches": 0,
                 "mismatches": 0,
                 "missing_in_pdf": 0,
-                "missing_in_evd": 0
+                "missing_in_evd": 0,
             },
             "matches": [],
             "mismatches": [],
@@ -148,66 +107,84 @@ class EVDPDFComparator:
             "missing_in_evd": []
         }
 
-        matched_pdf_keys = set()
+        matched_keys = set()
 
         for evd in evd_list:
             vendor = evd.get("vendor_normalized", "")
-            vendor_pdfs = pdf_data.get("by_vendor", {}).get(
+            candidate_pdfs = pdf_data.get("by_vendor", {}).get(
                 vendor, {}).get("invoices", [])
-
-            match, confidence = self.find_matching_pdf(
-                evd, vendor_pdfs)
-
-            if match:
-                key = (
-                    match.get("vendor_normalized"),
-                    self.normalize_invoice_number(
-                        match.get("invoice_number"))
-                )
-                matched_pdf_keys.add(key)
-
-                pdf_amt = self.normalize_amount(
-                    match.get("total_amount_eur"))
-                evd_amt = self.normalize_amount(
-                    evd.get("total_amount_eur"))
-
-                discrepancies = []
-
-                if not self.amounts_consistent_with_evd_sign_rules(evd_amt, pdf_amt):
-                    discrepancies.append({
-                        "type": "amount",
-                        "evd_value": evd_amt,
-                        "pdf_value": pdf_amt,
-                        "difference": abs(evd_amt - pdf_amt)
-                    })
-
-                result_obj = {
-                    "evd": evd,
-                    "pdf": match,
-                    "confidence": confidence,
-                    "discrepancies": discrepancies
-                }
-
-                if discrepancies:
-                    results["mismatches"].append(result_obj)
-                    results["summary"]["mismatches"] += 1
-                else:
-                    results["matches"].append(result_obj)
-                    results["summary"]["matches"] += 1
-
-            else:
+            match, confidence = self.find_matching_pdf(evd, candidate_pdfs)
+            if not match:
                 results["missing_in_pdf"].append(evd)
                 results["summary"]["missing_in_pdf"] += 1
+                continue
 
-        # Missing in EVD
+            key = (match.get("vendor_normalized"), self.normalize_invoice_number(
+                match.get("invoice_number")
+            ))
+            matched_keys.add(key)
+
+            evd_amt = self.normalize_amount(evd.get("total_amount_eur"))
+            pdf_amt = self.normalize_amount(match.get("total_amount_eur"))
+            discrepancies = []
+
+            if not self.amounts_consistent(evd_amt, pdf_amt):
+                discrepancies.append({
+                    "type": "amount",
+                    "evd_value": evd_amt,
+                    "pdf_value": pdf_amt,
+                    "difference": abs(evd_amt - pdf_amt),
+                })
+
+            obj = {"evd": evd, "pdf": match, "confidence": confidence,
+                   "discrepancies": discrepancies}
+
+            if discrepancies:
+                results["mismatches"].append(obj)
+                results["summary"]["mismatches"] += 1
+            else:
+                results["matches"].append(obj)
+                results["summary"]["matches"] += 1
+
         for pdf in pdf_list:
-            key = (
-                pdf.get("vendor_normalized"),
-                self.normalize_invoice_number(
-                    pdf.get("invoice_number"))
-            )
-            if key not in matched_pdf_keys:
+            key = (pdf.get("vendor_normalized"),
+                   self.normalize_invoice_number(pdf.get("invoice_number")))
+            if key not in matched_keys:
                 results["missing_in_evd"].append(pdf)
                 results["summary"]["missing_in_evd"] += 1
 
         return results
+
+
+# --------------------------------------
+# CLI entrypoint (optional)
+# --------------------------------------
+def main():
+    import sys
+
+    if len(sys.argv) < 3:
+        print(
+            "Usage: python pdf_evd_comparator.py <evd.json> <pdf.json> [output.json]")
+        sys.exit(1)
+
+    evd_file, pdf_file = sys.argv[1], sys.argv[2]
+    output_file = sys.argv[3] if len(
+        sys.argv) > 3 else "comparison_results.json"
+
+    with open(evd_file, "r", encoding="utf-8") as f:
+        evd_data = json.load(f)
+    with open(pdf_file, "r", encoding="utf-8") as f:
+        pdf_data = json.load(f)
+
+    cmptr = EVDPDFComparator()
+    results = cmptr.compare_datasets(evd_data, pdf_data)
+
+    print(json.dumps(results["summary"], indent=2))
+    with open(output_file, "w", encoding="utf-8") as f:
+        json.dump(results, f, indent=2)
+
+    print(f"Saved comparison results to: {output_file}")
+
+
+if __name__ == "__main__":
+    main()
