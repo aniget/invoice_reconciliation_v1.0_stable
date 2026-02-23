@@ -17,9 +17,6 @@ from openpyxl.utils import get_column_letter
 import sys
 import logging
 
-# Import and use comparator
-from pdf_evd_comparator import EVDPDFComparator
-
 
 class ReconciliationReportGenerator:
     """
@@ -533,9 +530,13 @@ class ReconciliationReportGenerator:
 
         # Difference: 0 when amounts match under EVD sign rules (expense/credit convention)
         if evd and pdf and evd_amt is not None and pdf_amt is not None:
-            diff = abs(evd_amt - pdf_amt)
-            ws.cell(row=row, column=8, value=diff)
-            ws.cell(row=row, column=8).number_format = '€#,##0.00'
+            # TODO: the below line has changed and think that it is not correct
+            if evd_amt == -pdf_amt:
+                diff = 0
+            else:
+                diff = abs(evd_amt - pdf_amt)
+        ws.cell(row=row, column=8, value=diff)
+        ws.cell(row=row, column=8).number_format = '€#,##0.00'
 
         ws.cell(row=row, column=11, value=notes)
 
