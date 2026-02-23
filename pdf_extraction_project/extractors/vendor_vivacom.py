@@ -11,6 +11,10 @@ Date: 2026-01-29
 import re
 from datetime import datetime
 from typing import Dict, Optional
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 class VivacomExtractor:
@@ -143,7 +147,7 @@ class VivacomExtractor:
         # Calculate confidence
         data['confidence'] = self._calculate_confidence(data)
 
-        logging.info(
+        logger.info(
             f"WWWWWWWWWWWWWWWWWW Extracted total amount in EUR: {data['total_amount_eur']}")
 
         return data
@@ -334,13 +338,13 @@ if __name__ == "__main__":
 
     extractor = VivacomExtractor()
 
-    logging.info("Detection test:")
-    logging.info(f"  Is Vivacom invoice: {extractor.detect(sample_text)}")
+    logger.info("Detection test:")
+    logger.info(f"  Is Vivacom invoice: {extractor.detect(sample_text)}")
 
-    logging.info("\nExtraction test:")
+    logger.info("\nExtraction test:")
     data = extractor.extract(sample_text)
 
     for key, value in data.items():
-        logging.info(f"  {key}: {value}")
+        logger.info(f"  {key}: {value}")
 
-    logging.info(f"\nValidation: {extractor.validate(data)}")
+    logger.info(f"\nValidation: {extractor.validate(data)}")

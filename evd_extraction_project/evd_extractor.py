@@ -16,6 +16,15 @@ import json
 import sys
 import logging
 
+# Configure logging
+logging.basicConfig(level=logging.INFO,
+                    format="%(asctime)s [%(levelname)s] %(message)s",
+                    handlers=[logging.FileHandler(
+                        "debug.log", encoding="utf-8"), logging.StreamHandler()],
+                    force=True
+                    )
+logger = logging.getLogger(__name__)
+
 
 class EVDExtractor:
     """
@@ -64,13 +73,13 @@ class EVDExtractor:
 
     def load_file(self):
         """Load the Excel workbook."""
-        logging.info(f"Loading file: {self.file_path}")
+        logger.info(f"Loading file: {self.file_path}")
         self.workbook = openpyxl.load_workbook(self.file_path, data_only=True)
-        logging.info(f"Opening file: {self.file_path}")
+        logger.info(f"Opening file: {self.file_path}")
 
         self.worksheet = self.workbook.active
-        logging.info(f"  Sheet: {self.worksheet.title}")
-        logging.info(f"  Dimensions: {self.worksheet.dimensions}")
+        logger.info(f"  Sheet: {self.worksheet.title}")
+        logger.info(f"  Dimensions: {self.worksheet.dimensions}")
 
     def find_data_start_row(self):
         """
@@ -83,11 +92,11 @@ class EVDExtractor:
                 if 'Invoice information' in cell_val or 'Информация за фактура' in cell_val:
                     # Data starts 2 rows after this header
                     self.data_start_row = row_idx + 2
-                    logging.info(
+                    logger.info(
                         f"Found data start row: {self.data_start_row}")
                     return
 
-        logging.info(f"Using default data start row: {self.data_start_row}")
+        logger.info(f"Using default data start row: {self.data_start_row}")
 
     def normalize_vendor_name(self, vendor):
         """
@@ -128,7 +137,7 @@ class EVDExtractor:
         # Find the last row with data
         max_row = self.worksheet.max_row
 
-        logging.info(
+        logger.info(
             f"\nExtracting invoice data from rows {self.data_start_row} to {max_row}...")
 
         for row_idx in range(self.data_start_row, max_row + 1):
@@ -137,7 +146,7 @@ class EVDExtractor:
                 row=row_idx, column=self.COLUMNS['vendor']).value
 
             # Skip empty rows or header rows
-            if not vendor or not isinstance(vendor, str) or len(vendor.strip()) < 3:
+            if not vendor or not isinstance(vendor, str) or len(vendor.strip()) < 5:
                 continue
 
             # Skip if it looks like a header or metadata row
@@ -184,10 +193,10 @@ class EVDExtractor:
             # Only add if we have at least invoice number and vendor
             if invoice['invoice_number'] and invoice['vendor_normalized']:
                 invoices.append(invoice)
-                logging.info(
+                logger.info(
                     f"  Row {row_idx}: {invoice['vendor_normalized']} - {invoice['invoice_number']} - €{invoice['total_amount_eur']}")
 
-        logging.info(f"\nExtracted {len(invoices)} invoice records")
+        logger.info(f"\nExtracted {len(invoices)} invoice records")
         return invoices
 
     def _format_date(self, date_val):
@@ -300,40 +309,40 @@ class EVDExtractor:
         output_path = Path(output_path)
         with open(output_path, 'w', encoding="utf-8") as f:
             json.dump(data, f, indent=2, ensure_ascii=False)
-        logging.info(f"\nSaved to: {output_path}")
+        logger.info(f"\nSaved to: {output_path}")
 
     def print_summary(self, data):
         """Print a summary of extracted data."""
-        logging.info("\n" + "="*80)
-        logging.info("EXTRACTION SUMMARY")
-        logging.info("="*80)
+        logger.info("\n" + "="*80)
+        logger.info("EXTRACTION SUMMARY")
+        logger.info("="*80)
 
         metadata = data['metadata']
-        logging.info(f"Source file: {metadata['source_file']}")
-        logging.info(f"Extraction date: {metadata['extraction_date']}")
-        logging.info(f"Total invoices: {metadata['total_invoices']}")
-        logging.info(f"Total vendors: {metadata['total_vendors']}")
-        logging.info(
+        logger.info(f"Source file: {metadata['source_file']}")
+        logger.info(f"Extraction date: {metadata['extraction_date']}")
+        logger.info(f"Total invoices: {metadata['total_invoices']}")
+        logger.info(f"Total vendors: {metadata['total_vendors']}")
+        logger.info(
             f"Total amount (EUR): €{metadata['total_amount_eur']:,.2f}")
 
-        logging.info("\nBy Vendor:")
+        logger.info("\nBy Vendor:")
         for vendor, vendor_data in data['by_vendor'].items():
-            logging.info(
+            logger.info(
                 f"  {vendor}: {vendor_data['invoice_count']} invoices, €{vendor_data['total_amount']:,.2f}")
 
 
 def main():
     """Main entry point."""
-    logging.info("="*80)
-    logging.info("EVD Data Extractor")
-    logging.info("="*80)
+    logger.info("="*80)
+    logger.info("EVD Data Extractor")
+    logger.info("="*80)
 
     if len(sys.argv) < 2:
-        logging.info(
+        logger.info(
             "\nUsage: python evd_extractor.py <evd_file.xlsx> [output.json]")
-        logging.info("\nExample:")
-        logging.info("  python evd_extractor.py Zaiavka_za_plashtane.xlsx")
-        logging.info(
+        logger.info("\nExample:")
+        logger.info("  python evd_extractor.py Zaiavka_za_plashtane.xlsx")
+        logger.info(
             "  python evd_extractor.py Zaiavka_za_plashtane.xlsx output_data.json")
         sys.exit(1)
 
@@ -347,7 +356,7 @@ def main():
 
     try:
         # Extract data
-        logging.info("Start extrating ...")
+        logger.info("Start extrating ...")
         extractor = EVDExtractor(input_file)
 
         data = extractor.extract_and_structure()
@@ -358,13 +367,13 @@ def main():
         # Save to JSON
         extractor.save_to_json(data, output_file)
 
-        logging.info("\n[SUCCESS] Extraction completed successfully!")
+        logger.info("\n[SUCCESS] Extraction completed successfully!")
 
     except FileNotFoundError:
-        logging.info(f"\n[ERROR] Error: File not found: {input_file}")
+        logger.info(f"\n[ERROR] Error: File not found: {input_file}")
         sys.exit(1)
     except Exception as e:
-        logging.info(f"\n[ERROR] Error during extraction: {str(e)}")
+        logger.info(f"\n[ERROR] Error during extraction: {str(e)}")
         import traceback
         traceback.print_exc()
         sys.exit(1)

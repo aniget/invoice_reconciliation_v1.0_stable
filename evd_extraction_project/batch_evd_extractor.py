@@ -11,12 +11,10 @@ Date: 2026-01-29
 from datetime import datetime
 import json
 from pathlib import Path
-from evd_extractor import EVDExtractor
 import sys
 import logging
 
-# Import the single-file extractor
-sys.path.insert(0, str(Path(__file__).parent))
+from .evd_extractor import EVDExtractor
 
 
 class BatchEVDProcessor:

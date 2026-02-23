@@ -112,7 +112,7 @@ class YettelExtractor:
         # Extract fields
         data = {}
 
-        data['vendor'] = 'YETTEL БЪЛГАРИЯ'
+        data['vendor'] = 'ЙЕТТЕЛ БЪЛГАРИЯ'
         data['vendor_normalized'] = 'YETTEL BULGARIA'
 
         # Core fields

@@ -13,14 +13,11 @@ import pdfplumber
 from typing import Dict, List, Optional
 from pathlib import Path
 import json
-from extractors.generic_extractor import GenericExtractor
-from extractors.vendor_yettel import YettelExtractor
-from extractors.vendor_vivacom import VivacomExtractor
+from .extractors.generic_extractor import GenericExtractor
+from .extractors.vendor_yettel import YettelExtractor
+from .extractors.vendor_vivacom import VivacomExtractor
 import sys
 import logging
-
-# Import vendor extractors
-sys.path.insert(0, str(Path(__file__).parent))
 
 
 class PDFInvoiceProcessor:

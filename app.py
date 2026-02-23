@@ -12,6 +12,7 @@ Core features:
 """
 
 import traceback
+import sys
 import tempfile
 import subprocess
 from datetime import datetime
@@ -24,8 +25,6 @@ import logging
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s", handlers=[
                     logging.FileHandler("debug.log", encoding="utf-8"), logging.StreamHandler()], force=True)
-
-logging.info("TEST: Logging is working")
 
 
 class InvoiceReconciliationUI:
@@ -84,7 +83,9 @@ class InvoiceReconciliationUI:
             # Process EVD files
             evd_output = output_dir / "evd_data.json"
             result = subprocess.run([
-                'python', 'evd_extraction_project/batch_evd_extractor.py',
+                sys.executable,
+                '-m',
+                'evd_extraction_project.batch_evd_extractor',
                 str(evd_dir),
                 str(evd_output)
             ], capture_output=True, text=True)
@@ -97,7 +98,9 @@ class InvoiceReconciliationUI:
             # Process PDF files
             pdf_output = output_dir / "pdf_data.json"
             result = subprocess.run([
-                'python', 'pdf_extraction_project/pdf_processor.py',
+                sys.executable,
+                '-m',
+                'pdf_extraction_project.pdf_processor',
                 str(pdf_dir),
                 str(pdf_output)
             ], capture_output=True, text=True)
@@ -110,7 +113,9 @@ class InvoiceReconciliationUI:
             # Generate reconciliation report
             report_output = output_dir / "reconciliation_report.xlsx"
             result = subprocess.run([
-                'python', 'reconciliation_project/reconciliation_report.py',
+                sys.executable,
+                '-m',
+                'reconciliation_project.reconciliation_report',
                 str(evd_output),
                 str(pdf_output),
                 str(report_output)

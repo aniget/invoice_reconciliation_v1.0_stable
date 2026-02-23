@@ -1,0 +1,603 @@
+{
+  "metadata": {
+    "source_file": "ZaiavkaBG.xlsx",
+    "extraction_date": "2026-02-24 00:15:42",
+    "total_invoices": 14,
+    "total_vendors": 2,
+    "total_amount_eur": -2214.4800000000214
+  },
+  "by_vendor": {
+    "ЙЕТТЕЛ БЪЛГАРИЯ": {
+      "vendor_name": "ЙЕТТЕЛ БЪЛГАРИЯ",
+      "invoice_count": 5,
+      "total_amount": -442625.65,
+      "invoices": [
+        {
+          "evd_row": 14,
+          "row_number": 1,
+          "vendor_original": "Йеттел България ЕАД",
+          "vendor_normalized": "ЙЕТТЕЛ БЪЛГАРИЯ",
+          "invoice_number": "4500127725",
+          "invoice_date": "2026-02-17",
+          "currency": "EUR",
+          "currency_amount": 0.0,
+          "net_amount_eur": 0.0,
+          "vat_amount_eur": 0.0,
+          "total_amount_eur": -430027.75
+        },
+        {
+          "evd_row": 15,
+          "row_number": 2,
+          "vendor_original": "Йеттел България ЕАД",
+          "vendor_normalized": "ЙЕТТЕЛ БЪЛГАРИЯ",
+          "invoice_number": "4500127726",
+          "invoice_date": "2026-02-17",
+          "currency": "EUR",
+          "currency_amount": 0.0,
+          "net_amount_eur": 0.0,
+          "vat_amount_eur": 0.0,
+          "total_amount_eur": -7487.34
+        },
+        {
+          "evd_row": 16,
+          "row_number": 3,
+          "vendor_original": "Йеттел България ЕАД",
+          "vendor_normalized": "ЙЕТТЕЛ БЪЛГАРИЯ",
+          "invoice_number": "4500127727",
+          "invoice_date": "2026-02-17",
+          "currency": "EUR",
+          "currency_amount": 0.0,
+          "net_amount_eur": 0.0,
+          "vat_amount_eur": 0.0,
+          "total_amount_eur": -1160.74
+        },
+        {
+          "evd_row": 17,
+          "row_number": 4,
+          "vendor_original": "Йеттел България ЕАД",
+          "vendor_normalized": "ЙЕТТЕЛ БЪЛГАРИЯ",
+          "invoice_number": "4500127728",
+          "invoice_date": "2026-02-17",
+          "currency": "EUR",
+          "currency_amount": 0.0,
+          "net_amount_eur": 0.0,
+          "vat_amount_eur": 0.0,
+          "total_amount_eur": -627.4
+        },
+        {
+          "evd_row": 18,
+          "row_number": 5,
+          "vendor_original": "Йеттел България ЕАД",
+          "vendor_normalized": "ЙЕТТЕЛ БЪЛГАРИЯ",
+          "invoice_number": "4500127729",
+          "invoice_date": "2026-02-17",
+          "currency": "EUR",
+          "currency_amount": 0.0,
+          "net_amount_eur": 0.0,
+          "vat_amount_eur": 0.0,
+          "total_amount_eur": -3322.42
+        }
+      ]
+    },
+    "ВИВАКОМ БЪЛГАРИЯ": {
+      "vendor_name": "ВИВАКОМ БЪЛГАРИЯ",
+      "invoice_count": 9,
+      "total_amount": 440411.17,
+      "invoices": [
+        {
+          "evd_row": 20,
+          "row_number": 1,
+          "vendor_original": "Виваком България ЕАД",
+          "vendor_normalized": "ВИВАКОМ БЪЛГАРИЯ",
+          "invoice_number": "63266780",
+          "invoice_date": "2026-02-17",
+          "currency": "EUR",
+          "currency_amount": 0.0,
+          "net_amount_eur": 0.0,
+          "vat_amount_eur": 0.0,
+          "total_amount_eur": 1711.66
+        },
+        {
+          "evd_row": 21,
+          "row_number": 2,
+          "vendor_original": "Виваком България ЕАД",
+          "vendor_normalized": "ВИВАКОМ БЪЛГАРИЯ",
+          "invoice_number": "63266781",
+          "invoice_date": "2026-02-17",
+          "currency": "EUR",
+          "currency_amount": 0.0,
+          "net_amount_eur": 0.0,
+          "vat_amount_eur": 0.0,
+          "total_amount_eur": 934.75
+        },
+        {
+          "evd_row": 22,
+          "row_number": 3,
+          "vendor_original": "Виваком България ЕАД",
+          "vendor_normalized": "ВИВАКОМ БЪЛГАРИЯ",
+          "invoice_number": "63266782",
+          "invoice_date": "2026-02-17",
+          "currency": "EUR",
+          "currency_amount": 0.0,
+          "net_amount_eur": 0.0,
+          "vat_amount_eur": 0.0,
+          "total_amount_eur": 9667.15
+        },
+        {
+          "evd_row": 23,
+          "row_number": 4,
+          "vendor_original": "Виваком България ЕАД",
+          "vendor_normalized": "ВИВАКОМ БЪЛГАРИЯ",
+          "invoice_number": "63266783",
+          "invoice_date": "2026-02-17",
+          "currency": "EUR",
+          "currency_amount": 0.0,
+          "net_amount_eur": 0.0,
+          "vat_amount_eur": 0.0,
+          "total_amount_eur": 47.0
+        },
+        {
+          "evd_row": 24,
+          "row_number": 5,
+          "vendor_original": "Виваком България ЕАД",
+          "vendor_normalized": "ВИВАКОМ БЪЛГАРИЯ",
+          "invoice_number": "63266784",
+          "invoice_date": "2026-02-17",
+          "currency": "EUR",
+          "currency_amount": 0.0,
+          "net_amount_eur": 0.0,
+          "vat_amount_eur": 0.0,
+          "total_amount_eur": 7537.56
+        },
+        {
+          "evd_row": 25,
+          "row_number": 6,
+          "vendor_original": "Виваком България ЕАД",
+          "vendor_normalized": "ВИВАКОМ БЪЛГАРИЯ",
+          "invoice_number": "63266785",
+          "invoice_date": "2026-02-17",
+          "currency": "EUR",
+          "currency_amount": 0.0,
+          "net_amount_eur": 0.0,
+          "vat_amount_eur": 0.0,
+          "total_amount_eur": 367631.51
+        },
+        {
+          "evd_row": 26,
+          "row_number": 7,
+          "vendor_original": "Виваком България ЕАД",
+          "vendor_normalized": "ВИВАКОМ БЪЛГАРИЯ",
+          "invoice_number": "63266786",
+          "invoice_date": "2026-02-17",
+          "currency": "EUR",
+          "currency_amount": 0.0,
+          "net_amount_eur": 0.0,
+          "vat_amount_eur": 0.0,
+          "total_amount_eur": 42725.99
+        },
+        {
+          "evd_row": 27,
+          "row_number": 8,
+          "vendor_original": "Виваком България ЕАД",
+          "vendor_normalized": "ВИВАКОМ БЪЛГАРИЯ",
+          "invoice_number": "63266787",
+          "invoice_date": "2026-02-17",
+          "currency": "EUR",
+          "currency_amount": 0.0,
+          "net_amount_eur": 0.0,
+          "vat_amount_eur": 0.0,
+          "total_amount_eur": 10155.14
+        },
+        {
+          "evd_row": 28,
+          "row_number": 9,
+          "vendor_original": "Виваком България ЕАД",
+          "vendor_normalized": "ВИВАКОМ БЪЛГАРИЯ",
+          "invoice_number": "63266788",
+          "invoice_date": "2026-02-17",
+          "currency": "EUR",
+          "currency_amount": 0.0,
+          "net_amount_eur": 0.0,
+          "vat_amount_eur": 0.0,
+          "total_amount_eur": 0.41
+        }
+      ]
+    }
+  },
+  "by_invoice_number": {
+    "4500127725": [
+      {
+        "evd_row": 14,
+        "row_number": 1,
+        "vendor_original": "Йеттел България ЕАД",
+        "vendor_normalized": "ЙЕТТЕЛ БЪЛГАРИЯ",
+        "invoice_number": "4500127725",
+        "invoice_date": "2026-02-17",
+        "currency": "EUR",
+        "currency_amount": 0.0,
+        "net_amount_eur": 0.0,
+        "vat_amount_eur": 0.0,
+        "total_amount_eur": -430027.75
+      }
+    ],
+    "4500127726": [
+      {
+        "evd_row": 15,
+        "row_number": 2,
+        "vendor_original": "Йеттел България ЕАД",
+        "vendor_normalized": "ЙЕТТЕЛ БЪЛГАРИЯ",
+        "invoice_number": "4500127726",
+        "invoice_date": "2026-02-17",
+        "currency": "EUR",
+        "currency_amount": 0.0,
+        "net_amount_eur": 0.0,
+        "vat_amount_eur": 0.0,
+        "total_amount_eur": -7487.34
+      }
+    ],
+    "4500127727": [
+      {
+        "evd_row": 16,
+        "row_number": 3,
+        "vendor_original": "Йеттел България ЕАД",
+        "vendor_normalized": "ЙЕТТЕЛ БЪЛГАРИЯ",
+        "invoice_number": "4500127727",
+        "invoice_date": "2026-02-17",
+        "currency": "EUR",
+        "currency_amount": 0.0,
+        "net_amount_eur": 0.0,
+        "vat_amount_eur": 0.0,
+        "total_amount_eur": -1160.74
+      }
+    ],
+    "4500127728": [
+      {
+        "evd_row": 17,
+        "row_number": 4,
+        "vendor_original": "Йеттел България ЕАД",
+        "vendor_normalized": "ЙЕТТЕЛ БЪЛГАРИЯ",
+        "invoice_number": "4500127728",
+        "invoice_date": "2026-02-17",
+        "currency": "EUR",
+        "currency_amount": 0.0,
+        "net_amount_eur": 0.0,
+        "vat_amount_eur": 0.0,
+        "total_amount_eur": -627.4
+      }
+    ],
+    "4500127729": [
+      {
+        "evd_row": 18,
+        "row_number": 5,
+        "vendor_original": "Йеттел България ЕАД",
+        "vendor_normalized": "ЙЕТТЕЛ БЪЛГАРИЯ",
+        "invoice_number": "4500127729",
+        "invoice_date": "2026-02-17",
+        "currency": "EUR",
+        "currency_amount": 0.0,
+        "net_amount_eur": 0.0,
+        "vat_amount_eur": 0.0,
+        "total_amount_eur": -3322.42
+      }
+    ],
+    "63266780": [
+      {
+        "evd_row": 20,
+        "row_number": 1,
+        "vendor_original": "Виваком България ЕАД",
+        "vendor_normalized": "ВИВАКОМ БЪЛГАРИЯ",
+        "invoice_number": "63266780",
+        "invoice_date": "2026-02-17",
+        "currency": "EUR",
+        "currency_amount": 0.0,
+        "net_amount_eur": 0.0,
+        "vat_amount_eur": 0.0,
+        "total_amount_eur": 1711.66
+      }
+    ],
+    "63266781": [
+      {
+        "evd_row": 21,
+        "row_number": 2,
+        "vendor_original": "Виваком България ЕАД",
+        "vendor_normalized": "ВИВАКОМ БЪЛГАРИЯ",
+        "invoice_number": "63266781",
+        "invoice_date": "2026-02-17",
+        "currency": "EUR",
+        "currency_amount": 0.0,
+        "net_amount_eur": 0.0,
+        "vat_amount_eur": 0.0,
+        "total_amount_eur": 934.75
+      }
+    ],
+    "63266782": [
+      {
+        "evd_row": 22,
+        "row_number": 3,
+        "vendor_original": "Виваком България ЕАД",
+        "vendor_normalized": "ВИВАКОМ БЪЛГАРИЯ",
+        "invoice_number": "63266782",
+        "invoice_date": "2026-02-17",
+        "currency": "EUR",
+        "currency_amount": 0.0,
+        "net_amount_eur": 0.0,
+        "vat_amount_eur": 0.0,
+        "total_amount_eur": 9667.15
+      }
+    ],
+    "63266783": [
+      {
+        "evd_row": 23,
+        "row_number": 4,
+        "vendor_original": "Виваком България ЕАД",
+        "vendor_normalized": "ВИВАКОМ БЪЛГАРИЯ",
+        "invoice_number": "63266783",
+        "invoice_date": "2026-02-17",
+        "currency": "EUR",
+        "currency_amount": 0.0,
+        "net_amount_eur": 0.0,
+        "vat_amount_eur": 0.0,
+        "total_amount_eur": 47.0
+      }
+    ],
+    "63266784": [
+      {
+        "evd_row": 24,
+        "row_number": 5,
+        "vendor_original": "Виваком България ЕАД",
+        "vendor_normalized": "ВИВАКОМ БЪЛГАРИЯ",
+        "invoice_number": "63266784",
+        "invoice_date": "2026-02-17",
+        "currency": "EUR",
+        "currency_amount": 0.0,
+        "net_amount_eur": 0.0,
+        "vat_amount_eur": 0.0,
+        "total_amount_eur": 7537.56
+      }
+    ],
+    "63266785": [
+      {
+        "evd_row": 25,
+        "row_number": 6,
+        "vendor_original": "Виваком България ЕАД",
+        "vendor_normalized": "ВИВАКОМ БЪЛГАРИЯ",
+        "invoice_number": "63266785",
+        "invoice_date": "2026-02-17",
+        "currency": "EUR",
+        "currency_amount": 0.0,
+        "net_amount_eur": 0.0,
+        "vat_amount_eur": 0.0,
+        "total_amount_eur": 367631.51
+      }
+    ],
+    "63266786": [
+      {
+        "evd_row": 26,
+        "row_number": 7,
+        "vendor_original": "Виваком България ЕАД",
+        "vendor_normalized": "ВИВАКОМ БЪЛГАРИЯ",
+        "invoice_number": "63266786",
+        "invoice_date": "2026-02-17",
+        "currency": "EUR",
+        "currency_amount": 0.0,
+        "net_amount_eur": 0.0,
+        "vat_amount_eur": 0.0,
+        "total_amount_eur": 42725.99
+      }
+    ],
+    "63266787": [
+      {
+        "evd_row": 27,
+        "row_number": 8,
+        "vendor_original": "Виваком България ЕАД",
+        "vendor_normalized": "ВИВАКОМ БЪЛГАРИЯ",
+        "invoice_number": "63266787",
+        "invoice_date": "2026-02-17",
+        "currency": "EUR",
+        "currency_amount": 0.0,
+        "net_amount_eur": 0.0,
+        "vat_amount_eur": 0.0,
+        "total_amount_eur": 10155.14
+      }
+    ],
+    "63266788": [
+      {
+        "evd_row": 28,
+        "row_number": 9,
+        "vendor_original": "Виваком България ЕАД",
+        "vendor_normalized": "ВИВАКОМ БЪЛГАРИЯ",
+        "invoice_number": "63266788",
+        "invoice_date": "2026-02-17",
+        "currency": "EUR",
+        "currency_amount": 0.0,
+        "net_amount_eur": 0.0,
+        "vat_amount_eur": 0.0,
+        "total_amount_eur": 0.41
+      }
+    ]
+  },
+  "all_invoices": [
+    {
+      "evd_row": 14,
+      "row_number": 1,
+      "vendor_original": "Йеттел България ЕАД",
+      "vendor_normalized": "ЙЕТТЕЛ БЪЛГАРИЯ",
+      "invoice_number": "4500127725",
+      "invoice_date": "2026-02-17",
+      "currency": "EUR",
+      "currency_amount": 0.0,
+      "net_amount_eur": 0.0,
+      "vat_amount_eur": 0.0,
+      "total_amount_eur": -430027.75
+    },
+    {
+      "evd_row": 15,
+      "row_number": 2,
+      "vendor_original": "Йеттел България ЕАД",
+      "vendor_normalized": "ЙЕТТЕЛ БЪЛГАРИЯ",
+      "invoice_number": "4500127726",
+      "invoice_date": "2026-02-17",
+      "currency": "EUR",
+      "currency_amount": 0.0,
+      "net_amount_eur": 0.0,
+      "vat_amount_eur": 0.0,
+      "total_amount_eur": -7487.34
+    },
+    {
+      "evd_row": 16,
+      "row_number": 3,
+      "vendor_original": "Йеттел България ЕАД",
+      "vendor_normalized": "ЙЕТТЕЛ БЪЛГАРИЯ",
+      "invoice_number": "4500127727",
+      "invoice_date": "2026-02-17",
+      "currency": "EUR",
+      "currency_amount": 0.0,
+      "net_amount_eur": 0.0,
+      "vat_amount_eur": 0.0,
+      "total_amount_eur": -1160.74
+    },
+    {
+      "evd_row": 17,
+      "row_number": 4,
+      "vendor_original": "Йеттел България ЕАД",
+      "vendor_normalized": "ЙЕТТЕЛ БЪЛГАРИЯ",
+      "invoice_number": "4500127728",
+      "invoice_date": "2026-02-17",
+      "currency": "EUR",
+      "currency_amount": 0.0,
+      "net_amount_eur": 0.0,
+      "vat_amount_eur": 0.0,
+      "total_amount_eur": -627.4
+    },
+    {
+      "evd_row": 18,
+      "row_number": 5,
+      "vendor_original": "Йеттел България ЕАД",
+      "vendor_normalized": "ЙЕТТЕЛ БЪЛГАРИЯ",
+      "invoice_number": "4500127729",
+      "invoice_date": "2026-02-17",
+      "currency": "EUR",
+      "currency_amount": 0.0,
+      "net_amount_eur": 0.0,
+      "vat_amount_eur": 0.0,
+      "total_amount_eur": -3322.42
+    },
+    {
+      "evd_row": 20,
+      "row_number": 1,
+      "vendor_original": "Виваком България ЕАД",
+      "vendor_normalized": "ВИВАКОМ БЪЛГАРИЯ",
+      "invoice_number": "63266780",
+      "invoice_date": "2026-02-17",
+      "currency": "EUR",
+      "currency_amount": 0.0,
+      "net_amount_eur": 0.0,
+      "vat_amount_eur": 0.0,
+      "total_amount_eur": 1711.66
+    },
+    {
+      "evd_row": 21,
+      "row_number": 2,
+      "vendor_original": "Виваком България ЕАД",
+      "vendor_normalized": "ВИВАКОМ БЪЛГАРИЯ",
+      "invoice_number": "63266781",
+      "invoice_date": "2026-02-17",
+      "currency": "EUR",
+      "currency_amount": 0.0,
+      "net_amount_eur": 0.0,
+      "vat_amount_eur": 0.0,
+      "total_amount_eur": 934.75
+    },
+    {
+      "evd_row": 22,
+      "row_number": 3,
+      "vendor_original": "Виваком България ЕАД",
+      "vendor_normalized": "ВИВАКОМ БЪЛГАРИЯ",
+      "invoice_number": "63266782",
+      "invoice_date": "2026-02-17",
+      "currency": "EUR",
+      "currency_amount": 0.0,
+      "net_amount_eur": 0.0,
+      "vat_amount_eur": 0.0,
+      "total_amount_eur": 9667.15
+    },
+    {
+      "evd_row": 23,
+      "row_number": 4,
+      "vendor_original": "Виваком България ЕАД",
+      "vendor_normalized": "ВИВАКОМ БЪЛГАРИЯ",
+      "invoice_number": "63266783",
+      "invoice_date": "2026-02-17",
+      "currency": "EUR",
+      "currency_amount": 0.0,
+      "net_amount_eur": 0.0,
+      "vat_amount_eur": 0.0,
+      "total_amount_eur": 47.0
+    },
+    {
+      "evd_row": 24,
+      "row_number": 5,
+      "vendor_original": "Виваком България ЕАД",
+      "vendor_normalized": "ВИВАКОМ БЪЛГАРИЯ",
+      "invoice_number": "63266784",
+      "invoice_date": "2026-02-17",
+      "currency": "EUR",
+      "currency_amount": 0.0,
+      "net_amount_eur": 0.0,
+      "vat_amount_eur": 0.0,
+      "total_amount_eur": 7537.56
+    },
+    {
+      "evd_row": 25,
+      "row_number": 6,
+      "vendor_original": "Виваком България ЕАД",
+      "vendor_normalized": "ВИВАКОМ БЪЛГАРИЯ",
+      "invoice_number": "63266785",
+      "invoice_date": "2026-02-17",
+      "currency": "EUR",
+      "currency_amount": 0.0,
+      "net_amount_eur": 0.0,
+      "vat_amount_eur": 0.0,
+      "total_amount_eur": 367631.51
+    },
+    {
+      "evd_row": 26,
+      "row_number": 7,
+      "vendor_original": "Виваком България ЕАД",
+      "vendor_normalized": "ВИВАКОМ БЪЛГАРИЯ",
+      "invoice_number": "63266786",
+      "invoice_date": "2026-02-17",
+      "currency": "EUR",
+      "currency_amount": 0.0,
+      "net_amount_eur": 0.0,
+      "vat_amount_eur": 0.0,
+      "total_amount_eur": 42725.99
+    },
+    {
+      "evd_row": 27,
+      "row_number": 8,
+      "vendor_original": "Виваком България ЕАД",
+      "vendor_normalized": "ВИВАКОМ БЪЛГАРИЯ",
+      "invoice_number": "63266787",
+      "invoice_date": "2026-02-17",
+      "currency": "EUR",
+      "currency_amount": 0.0,
+      "net_amount_eur": 0.0,
+      "vat_amount_eur": 0.0,
+      "total_amount_eur": 10155.14
+    },
+    {
+      "evd_row": 28,
+      "row_number": 9,
+      "vendor_original": "Виваком България ЕАД",
+      "vendor_normalized": "ВИВАКОМ БЪЛГАРИЯ",
+      "invoice_number": "63266788",
+      "invoice_date": "2026-02-17",
+      "currency": "EUR",
+      "currency_amount": 0.0,
+      "net_amount_eur": 0.0,
+      "vat_amount_eur": 0.0,
+      "total_amount_eur": 0.41
+    }
+  ]
+}
