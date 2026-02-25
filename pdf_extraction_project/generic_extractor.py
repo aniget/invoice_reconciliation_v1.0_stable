@@ -1,18 +1,19 @@
+from pathlib import Path
 from pdf_extraction_project.template_registry import TemplateRegistry
 from pdf_extraction_project.template_engine import TemplateExtractor
-from pathlib import Path
 
 TEMPLATE_DIR = Path("pdf_extraction_project/templates")
+
 registry = TemplateRegistry(TEMPLATE_DIR)
 registry.load()
 
 
-def extract_with_template(vendor: str, pdf_text: str):
+def extract_generic(pdf_text: str):
 
-    template = registry.get(vendor)
+    template = registry.get("Generic")
 
     if not template:
-        template = registry.get("Generic")
+        raise ValueError("Generic template missing")
 
     extractor = TemplateExtractor(template)
     return extractor.extract(pdf_text)

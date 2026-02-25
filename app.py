@@ -22,9 +22,16 @@ import shutil
 import os
 import gradio as gr
 import logging
+from pdf_extraction_project.ui.template_builder_ui import build_ui
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s", handlers=[
                     logging.FileHandler("debug.log", encoding="utf-8"), logging.StreamHandler()], force=True)
+
+
+builder = build_ui()
+
+with gr.Tab("Template Builder"):
+    builder.render()
 
 
 class InvoiceReconciliationUI:

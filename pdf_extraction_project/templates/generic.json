@@ -1,0 +1,18 @@
+{
+    "vendor": "Generic",
+    "fields": {
+        "invoice_number": {
+            "type": "regex",
+            "pattern": "(?i)invoice\\s*(no|number)?[:\\s]+([A-Z0-9\\-]+)"
+        },
+        "invoice_date": {
+            "type": "regex",
+            "pattern": "(?i)(date)[:\\s]+([0-9\\.\\-/]+)"
+        },
+        "total_amount": {
+            "type": "regex",
+            "pattern": "(?i)(total|amount due|total due)[:\\s]+([0-9\\.,]+)",
+            "post_process": "to_decimal"
+        }
+    }
+}
