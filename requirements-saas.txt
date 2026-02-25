@@ -1,0 +1,45 @@
+# Invoice Reconciliation System - SaaS Requirements
+# Version 2.0.0
+
+# Core dependencies (existing)
+gradio==4.12.0
+openpyxl==3.1.2
+pdfplumber==0.10.3
+Pillow==10.1.0
+
+# Optional OCR (existing)
+# pytesseract==0.3.10
+# pdf2image==1.16.3
+
+# SaaS Infrastructure - NEW
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+python-multipart==0.0.6
+
+# Database - NEW
+sqlalchemy==2.0.25
+psycopg2-binary==2.9.9
+alembic==1.13.1
+
+# Authentication & Security - NEW
+pyjwt==2.8.0
+passlib[bcrypt]==1.7.4
+python-jose[cryptography]==3.3.0
+
+# Configuration - NEW
+pydantic[email]==2.5.3
+python-dotenv==1.0.0
+
+# Background Jobs (Optional - for production) - NEW
+# celery==5.3.6
+# redis==5.0.1
+
+# Testing - NEW
+pytest==7.4.4
+pytest-asyncio==0.23.3
+httpx==0.26.0
+
+# Development Tools - NEW
+black==24.1.1
+flake8==7.0.0
+mypy==1.8.0
