@@ -10,6 +10,9 @@ gradio==3.50.2
 # Excel Processing
 openpyxl==3.1.2
 
+# Module for tests
+pytest
+
 # PDF Processing
 pdfplumber==0.10.3
 

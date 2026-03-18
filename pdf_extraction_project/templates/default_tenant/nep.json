@@ -1,0 +1,61 @@
+{
+    "vendor": "NEP MEDIA SOLUTIONS",
+    "vendor_normalized": "NEP MEDIA SOLUTIONS B.V.",
+    "detection_patterns": [
+        "NEP Media Solutions B.V.",
+        "NEP MEDIA SOLUTIONS",
+        "NL8156.70.291.B.01",
+        "CHASNL2X"
+    ],
+    "default_currency": "EUR",
+    "fields": {
+        "invoice_number": {
+            "type": "regex",
+            "patterns": [
+                "Invoicenr:[:\\s]*([0-9]+)",
+                "^([0-9]{9})$"
+            ]
+        },
+        "invoice_date": {
+            "type": "regex",
+            "patterns": [
+                "Invoice date\\s+(\\d{2}-\\d{2}-\\d{4})"
+            ],
+            "post_process": "to_date"
+        },
+        "net_amount_eur": {
+            "type": "regex",
+            "patterns": [
+                "Subtotal\\s+€\\s+([\\d.,]+)"
+            ],
+            "post_process": "to_decimal_eu"
+        },
+        "vat_amount_eur": {
+            "type": "regex",
+            "patterns": [
+                "VAT Reverse Charge\\s+\\d+\\s*%\\s+€\\s+([\\d.,]+)",
+                "VAT[\\s\\S]{0,20}?€\\s+([\\d.,]+)"
+            ],
+            "post_process": "to_decimal_eu"
+        },
+        "total_amount_eur": {
+            "type": "regex",
+            "patterns": [
+                "Total\\s+€\\s+([\\d.,]+)"
+            ],
+            "post_process": "to_decimal_eu"
+        },
+        "supplier_iban": {
+            "type": "regex",
+            "patterns": [
+                "IBAN:\\s*(NL[0-9A-Z]+)"
+            ]
+        },
+        "supplier_vat_number": {
+            "type": "regex",
+            "patterns": [
+                "BTW-nr:\\s*(NL[\\d.B]+)"
+            ]
+        }
+    }
+}

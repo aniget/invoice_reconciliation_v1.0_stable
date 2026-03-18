@@ -1,0 +1,45 @@
+{
+    "vendor": "Generic",
+    "vendor_normalized": "UNKNOWN",
+    "default_currency": "EUR",
+    "detection_patterns": [],
+    "fields": {
+        "invoice_number": {
+            "type": "regex",
+            "patterns": [
+                "(?:INVOICE|ФАКТУРА|Invoice|Фактура)\\s*(?:№|NO\\.?|#)[:\\s]*([A-Z0-9\\-\\/]+)",
+                "(?:Document|Документ)\\s*(?:№|NO\\.?|#)[:\\s]*([A-Z0-9\\-\\/]+)",
+                "№\\s*([0-9]{10})"
+            ]
+        },
+        "invoice_date": {
+            "type": "regex",
+            "patterns": [
+                "(?:Date|Дата)[:\\s]*(\\d{2}[\\.\\-\\/]\\d{2}[\\.\\-\\/]\\d{4})",
+                "(?:Date of issue|Дата на издаване)[:\\s]*(\\d{2}[\\.\\-\\/]\\d{2}[\\.\\-\\/]\\d{4})"
+            ],
+            "post_process": "to_date"
+        },
+        "net_amount_eur": {
+            "type": "regex",
+            "patterns": [
+                "(?:Net amount|Данъчна основа|Стойност на сделката)[:\\s]*(\\d{1,3}(?:[\\s\\.,]\\d{3})*[\\.,]\\d{2})(?:[:\\s]*(?:EUR|евро))?"
+            ],
+            "post_process": "to_decimal_eu"
+        },
+        "vat_amount_eur": {
+            "type": "regex",
+            "patterns": [
+                "(?:VAT|ДДС|Начислен ДДС)[:\\s]*(?:20%)?[:\\s]*(\\d{1,3}(?:[\\s\\.,]\\d{3})*[\\.,]\\d{2})(?:[:\\s]*(?:EUR|евро))?"
+            ],
+            "post_process": "to_decimal_eu"
+        },
+        "total_amount_eur": {
+            "type": "regex",
+            "patterns": [
+                "(?:Total amount to be paid|Обща сума за плащане|Total|Общо|Total amount|Обща сума|Обща стойност)[:\\s]*(\\d{1,3}(?:[\\s\\.,]\\d{3})*[\\.,]\\d{2})(?:[:\\s]*(?:EUR|евро))?"
+            ],
+            "post_process": "to_decimal_eu"
+        }
+    }
+}

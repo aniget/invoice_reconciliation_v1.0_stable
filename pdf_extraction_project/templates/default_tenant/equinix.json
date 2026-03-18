@@ -1,0 +1,75 @@
+{
+    "vendor": "EQUINIX GERMANY",
+    "vendor_normalized": "Equinix (Germany) GmbH",
+    "detection_patterns": [
+        "Equinix (Germany) GmbH",
+        "EQUINIX INVOICE",
+        "DE813255814"
+    ],
+    "default_currency": "EUR",
+    "fields": {
+        "invoice_number": {
+            "type": "regex",
+            "patterns": [
+                "Invoice\\s+#\\s+(\\d+)"
+            ]
+        },
+        "invoice_date": {
+            "type": "regex",
+            "patterns": [
+                "Invoice Date\\s+(\\d{1,2}-(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)-\\d{2,4})"
+            ],
+            "post_process": "to_date"
+        },
+        "due_date": {
+            "type": "regex",
+            "patterns": [
+                "Payment Due Date\\s+(\\d{1,2}-(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)-\\d{2,4})"
+            ],
+            "post_process": "to_date"
+        },
+        "net_amount_eur": {
+            "type": "regex",
+            "patterns": [
+                "Total Charges\\s+([\\d,]+\\.\\d{2})"
+            ],
+            "post_process": "to_decimal_us"
+        },
+        "vat_amount_eur": {
+            "type": "literal",
+            "value": 0.0
+        },
+        "total_amount_eur": {
+            "type": "regex",
+            "patterns": [
+                "Invoice Total Due\\s+([\\d,]+\\.\\d{2})"
+            ],
+            "post_process": "to_decimal_us"
+        },
+        "supplier_iban": {
+            "type": "regex",
+            "patterns": [
+                "IBAN\\s+#\\s+(DE[\\d\\s]+?)(?:\\n|SWIFT)"
+            ],
+            "post_process": "strip_spaces"
+        },
+        "supplier_bic": {
+            "type": "regex",
+            "patterns": [
+                "SWIFT/BIC\\s+#\\s+(\\w+)"
+            ]
+        },
+        "supplier_vat_number": {
+            "type": "regex",
+            "patterns": [
+                "Ust-ID\\s+(DE\\d+)"
+            ]
+        },
+        "currency": {
+            "type": "regex",
+            "patterns": [
+                "Currency\\s+([A-Z]{3})"
+            ]
+        }
+    }
+}

@@ -1,0 +1,72 @@
+{
+  "vendor": "A1 BULGARIA",
+  "vendor_normalized": "А1 БЪЛГАРИЯ",
+  "detection_patterns": [
+    "A1 България ЕАД",
+    "А1 БЪЛГАРИЯ",
+    "BG131468980"
+  ],
+  "pre_process": "strip_underscores",
+  "fields": {
+    "invoice_number": {
+      "type": "regex",
+      "patterns": [
+        "(?:Номер|Number)[:\\s]*([0-9]{10})",
+        "([0-9]{10})"
+      ]
+    },
+    "invoice_date": {
+      "type": "regex",
+      "patterns": [
+        "Дата\\s+(\\d{2}\\.\\d{2}\\.\\d{4})"
+      ],
+      "post_process": "to_date"
+    },
+    "due_date": {
+      "type": "regex",
+      "patterns": [
+        "Крайна дата на плащане[:\\s]*(\\d{2}\\.\\d{2}\\.\\d{4})"
+      ],
+      "post_process": "to_date"
+    },
+    "net_amount_eur": {
+      "type": "regex",
+      "patterns": [
+        "Стойност\\s+по\\s+сделката\\s+(\\d{1,3}(?:\\.\\d{3})*,\\d{2})"
+      ],
+      "post_process": "to_decimal_eu"
+    },
+    "vat_amount_eur": {
+      "type": "regex",
+      "patterns": [
+        "ДДС\\s+\\d{1,2},\\d{2}\\s*%\\s+(\\d{1,3}(?:\\.\\d{3})*,\\d{2})"
+      ],
+      "post_process": "to_decimal_eu"
+    },
+    "total_amount_eur": {
+      "type": "regex",
+      "patterns": [
+        "ОБЩО\\s+(\\d{1,3}(?:\\.\\d{3})*,\\d{2})(?!\\s+Словом)"
+      ],
+      "post_process": "to_decimal_eu"
+    },
+    "payment_method": {
+      "type": "regex",
+      "patterns": [
+        "Начин на плащане[:\\s]*([^\\n]+)"
+      ]
+    },
+    "supplier_iban": {
+      "type": "regex",
+      "patterns": [
+        "IBAN[:\\s]*(BG[0-9A-Z]{20})"
+      ]
+    },
+    "supplier_vat_number": {
+      "type": "regex",
+      "patterns": [
+        "ИД\\.?№ по ДДС[:\\s]*(BG\\d+)"
+      ]
+    }
+  }
+}
