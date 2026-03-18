@@ -10,7 +10,6 @@ project_dump.txt
 **/input_pdf/**
 **/output/**
 **/uploads/**
-**/
 *.json
 evd_data*.json
 pdf_data*.json
